@@ -16,7 +16,7 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clientID;
-    @NotEmpty
+    @NotEmpty(message = "Please provide a username")
     @Column(name = "username")
     private String userName;
     @Email
