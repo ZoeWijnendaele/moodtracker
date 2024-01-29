@@ -1,0 +1,43 @@
+@startuml
+
+title: Use Case: Calendar
+
+!define RECTANGLE class
+
+skinparam usecase {
+    BackgroundColor #D5DBDB
+    BorderColor #B9FD99
+    ArrowColor #49C191
+}
+
+skinparam actor {
+    BackgroundColor #F5B7B1
+    BorderColor #D5DBDB
+}
+
+' Define colors for components
+!define USER_COLOR #D5DBDB
+!define USE_CASE_COLOR #B9FD99
+
+' Actors
+actor :User: USER_COLOR
+
+' Use Cases
+usecase (Calendar) USE_CASE_COLOR
+usecase (Displaying the average mood \nper day on the calendar) USE_CASE_COLOR
+usecase (Click on day and see all \nthe mood entries of that day) USE_CASE_COLOR
+usecase (Click on mood entry and see \ninformation of mood entry) USE_CASE_COLOR
+usecase (Add new mood entry) USE_CASE_COLOR
+usecase (Update mood entry) USE_CASE_COLOR
+usecase (Delete mood entry) USE_CASE_COLOR
+
+' Connections
+:User: --> (Calendar)
+(Calendar) --> (Displaying the average mood \nper day on the calendar)
+(Displaying the average mood \nper day on the calendar) --> (Click on day and see all \nthe mood entries of that day)
+(Displaying the average mood \nper day on the calendar) --> (Add new mood entry)
+(Click on day and see all \nthe mood entries of that day) --> (Click on mood entry and see \ninformation of mood entry)
+(Click on mood entry and see \ninformation of mood entry) --> (Update mood entry)
+(Click on mood entry and see \ninformation of mood entry) --> (Delete mood entry)
+
+@enduml

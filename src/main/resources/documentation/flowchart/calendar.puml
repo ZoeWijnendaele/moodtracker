@@ -1,0 +1,57 @@
+@startuml
+
+title: Flow chart: Calendar
+
+start
+
+:User opens app;
+:User can view calendar;
+
+fork
+    :User selects add a new mood entry;
+        if (User wants to add new mood entry?) is (yes) then
+          :User submits new entry;
+
+          note: View the Flowchart of mood entry
+        else (no)
+
+        endif
+
+        fork again
+        : On calendar, the average mood of that day is displayed;
+
+            :User selects a preferred day;
+            :User sees all the mood entries with timestamps of that selected day;
+            if (User user selects a mood entry) then (yes)
+                :User sees all the information of selected mood entry;
+
+               fork
+               :User can select update mood entry;
+               if (User wants to update selected mood entry?) is (yes) then
+                :User can update emotion, rating or optional note;
+                :User is directed to updated entry;
+               else (no)
+                :User stays on selected mood entry;
+               endif
+
+              fork again
+              :User can delete selected mood entry;
+              if (User wants to delete selected mood entry?) is (yes) then
+                :Selected mood entry has been deleted;
+              else (no)
+                :User stays on selected mood entry;
+              endif
+        end fork
+
+        else (no)
+    endif
+
+    :User is directed to selected day;
+    :User exits selected day;
+
+ end fork
+
+ :User can view calendar;
+ :User exits app;
+ stop
+@enduml

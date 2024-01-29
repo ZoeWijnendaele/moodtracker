@@ -1,0 +1,36 @@
+@startuml
+
+title: Use Case: Login
+
+!define RECTANGLE class
+
+skinparam usecase {
+    BackgroundColor #D5DBDB
+    BorderColor #B9FD99
+    ArrowColor #49C191
+}
+
+skinparam actor {
+    BackgroundColor #F5B7B1
+    BorderColor #D5DBDB
+}
+
+' Define colors for components
+!define USER_COLOR #D5DBDB
+!define USE_CASE_COLOR #B9FD99
+
+' Actors
+actor :User: USER_COLOR
+
+' Use Cases
+usecase (Login) USE_CASE_COLOR
+usecase (Fill in email and password) USE_CASE_COLOR
+usecase (Submit login) USE_CASE_COLOR
+usecase (Logged in) USE_CASE_COLOR
+
+' Connections
+:User: --> (Login)
+(Login) --> (Fill in email and password)
+(Fill in email and password) --> (Submit login)
+(Submit login) --> (Logged in)
+@enduml

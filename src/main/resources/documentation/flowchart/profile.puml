@@ -1,0 +1,45 @@
+@startuml
+
+title: Flow Chart: User Profile
+
+start 
+
+:User opens personal profile;
+:User can view personal information;
+
+  fork
+    :User can update personal details;
+    if (User edits personal information?) then (yes)
+      :User directed to an updated personal profile;
+    else (no)
+      :User stays in personal profile;
+    endif
+
+  fork again
+    :User can update avatar;
+    if (User updates avatar?) then (yes)
+      :User directed to an updated personal profile;
+    else (no)
+      :User stays in personal profile;
+    endif
+
+  fork again
+    :User can deactivate profile;
+    if (User chooses to deactivate account?) then (yes)
+     : Are you sure?;
+    if (User chooses yes) then (yes)
+      stop;
+    else (no)
+      :User is directed to personal profile;
+    endif
+    else (no)
+    :User stays in personal profile;
+    endif
+
+  end fork
+
+:User exits personal profile;
+
+stop
+
+@enduml

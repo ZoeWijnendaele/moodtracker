@@ -1,0 +1,18 @@
+@startuml
+
+title: Flow chart: Mood-entry
+
+ :User selects the to add a new mood entry;
+    if (User wants to add new mood entry?) is (yes) then
+      :User chooses the emotion that they are feeling;
+      :User gives a rating on selected emotion;
+      :User can enter an optional description;
+      :User submits entry;
+
+    else (no)
+    end if
+
+:User is directed to calendar;
+:User exits app;
+stop
+@enduml

@@ -1,0 +1,102 @@
+@startuml
+title Sequence Diagram: Update mood entry
+
+actor User #D5DBDB
+boundary MoodTrackerApp #966efc
+control MoodController #99ebb9
+control MoodService #7c93e5
+database MoodRepository #9cc3f3
+entity Mood #B1A4A4
+
+!$color_success = '#d7f5b5'
+!$color_failure = '#f19fa4'
+
+participant User
+participant MoodTrackerApp
+participant MoodController
+participant MoodService
+participant MoodRepository
+participant Mood
+
+autonumber
+
+User ->MoodTrackerApp: Opens App
+activate User #D5DBDB
+activate MoodTrackerApp #966efc
+MoodTrackerApp -> User: Redirects to calendar
+User -> MoodTrackerApp: User selects to update mood entry
+MoodTrackerApp -> User: Displays update mood entry form
+User -> MoodTrackerApp: Select and update mood entry
+
+MoodTrackerApp -> User: Valid description
+User -> MoodTrackerApp: User submits updated mood entry
+deactivate User
+
+MoodTrackerApp -> MoodController: updateMood(Long id, MoodDTO moodDTO)
+deactivate MoodTrackerApp
+activate MoodController #99ebb9
+
+MoodController -> MoodService: updateMood(Long id, MoodDTO moodDTO)
+deactivate MoodController
+activate MoodService #7c93e5
+
+MoodService -> MoodService: Emotion validation
+MoodService -> MoodService: Rating validation
+MoodService -> MoodService: Optional description validation
+
+MoodService -> MoodRepository: updateMood(Long id, Mood mood)
+deactivate MoodService
+activate MoodRepository #9cc3f3
+
+MoodRepository -> Mood: save(Mood mood)
+deactivate MoodRepository
+activate Mood #B1A4A4
+
+group $color_failure Failed updating entry
+
+    Mood -> MoodRepository: return exception
+    activate MoodRepository #9cc3f3
+
+    MoodRepository -> MoodService: return exception
+    deactivate MoodRepository
+    activate MoodService #7c93e5
+
+    MoodService -> MoodController: return exception
+    deactivate MoodService
+    activate MoodController #99ebb9
+
+    MoodController -> MoodTrackerApp: return GlobalExceptionHandler
+    deactivate MoodController
+    activate MoodTrackerApp #966efc
+
+    MoodTrackerApp -> User: Error message
+    deactivate MoodTrackerApp
+    activate User #D5DBDB
+
+    group $color_success Success updating entry
+
+        Mood -> MoodRepository: return mood
+        deactivate Mood
+        activate MoodRepository #9cc3f3
+
+        MoodRepository -> MoodService: return save(mood)
+        deactivate MoodRepository
+        activate MoodService #7c93e5
+
+        MoodService -> MoodController: return mapMoodToMoodDTO(updatedMood)
+        deactivate MoodService
+        activate MoodController #99ebb9
+
+        MoodController -> MoodTrackerApp: return responseEntity
+        deactivate MoodController
+        activate MoodTrackerApp #966efc
+
+        MoodTrackerApp -> User: Message mood entry is updated
+        MoodTrackerApp -> User: User is directed to calendar
+        deactivate MoodTrackerApp
+        deactivate User
+   end
+end
+
+
+@enduml

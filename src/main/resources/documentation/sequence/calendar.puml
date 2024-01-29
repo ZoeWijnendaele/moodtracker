@@ -1,0 +1,67 @@
+@startuml
+
+title Sequence Diagram: Calendar average emotion of the day
+
+actor User #D5DBDB
+boundary MoodTrackerApp #966efc
+control CalendarController #99ebb9
+control CalendarService #7c93e5
+
+!$color_success = '#d7f5b5'
+!$color_failure = '#f19fa4'
+
+participant User
+participant MoodTrackerApp
+participant CalendarController
+participant CalendarService
+
+autonumber
+
+User ->MoodTrackerApp: Opens App
+activate User #D5DBDB
+activate MoodTrackerApp #966efc
+MoodTrackerApp -> User: Redirects to calendar
+User -> MoodTrackerApp: User views calendar
+deactivate User
+
+
+MoodTrackerApp -> CalendarController: averageEmotion(Date)
+deactivate MoodTrackerApp
+activate CalendarController #99ebb9
+
+CalendarController -> CalendarService: averageEmotion(Date)
+deactivate CalendarController
+activate CalendarService #7c93e5
+
+group $color_failure Failed to display average emotion of the day
+
+    CalendarService -> CalendarController: return exception
+    activate CalendarController #99ebb9
+
+    CalendarController -> MoodTrackerApp: return GlobalExceptionHandler
+    deactivate CalendarController
+    activate MoodTrackerApp #966efc
+
+    MoodTrackerApp -> User: Empty
+    deactivate MoodTrackerApp
+    activate User #D5DBDB
+
+    group $color_success Succes displaying average emotion of the day
+
+        CalendarService -> CalendarController: return mapMoodToMoodDTO(mood)
+        deactivate CalendarService
+        activate CalendarController #99ebb9
+
+        CalendarController -> MoodTrackerApp: return responseEntity
+        deactivate CalendarController
+        activate MoodTrackerApp #966efc
+
+        MoodTrackerApp -> User: Display of average emotion on dates
+        deactivate MoodTrackerApp
+        deactivate User
+    end
+end
+
+
+
+@enduml

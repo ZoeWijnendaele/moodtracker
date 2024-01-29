@@ -1,0 +1,95 @@
+@startuml
+title Sequence Diagram: Deactivate account
+
+actor User #D5DBDB
+boundary MoodTrackerApp #966efc
+control UserController #99ebb9
+control UserService #7c93e5
+database UserRepository #9cc3f3
+entity Users #B1A4A4
+
+!$color_success = '#d7f5b5'
+!$color_failure = '#f19fa4'
+
+participant User
+participant MoodTrackerApp
+participant UserController
+participant UserService
+participant UserRepository
+participant Users
+
+autonumber
+
+User -> MoodTrackerApp: Opens App
+activate User #D5DBDB
+activate MoodTrackerApp #966efc
+MoodTrackerApp -> User: Redirects to calendar
+User -> MoodTrackerApp: User selects profile
+MoodTrackerApp -> User: Displays profile
+User -> MoodTrackerApp: User selects deactivate account
+MoodTrackerApp -> User: Displays deactivate account message
+User -> MoodTrackerApp: User chooses to deactivate account
+deactivate User
+
+MoodTrackerApp -> UserController: deleteUser(Long id)
+deactivate MoodTrackerApp
+activate UserController #99ebb9
+
+UserController -> UserService: deleteUser(Long id)
+deactivate UserController
+activate UserService #7c93e5
+
+UserService -> UserRepository: deleteUser(Long id)
+deactivate UserService
+activate UserRepository #9cc3f3
+
+UserRepository -> Users: deleteById(id)
+deactivate UserRepository
+activate Users #B1A4A4
+
+group $color_failure Failed to deactivate account
+
+    Users -> UserRepository: return exception
+    activate UserRepository #9cc3f3
+
+    UserRepository -> UserService: return exception
+    deactivate UserRepository
+    activate UserService #7c93e5
+
+    UserService -> UserController: return exception
+    deactivate UserService
+    activate UserController #99ebb9
+
+    UserController -> MoodTrackerApp: return GlobalExceptionHandler
+    deactivate UserController
+    activate MoodTrackerApp #966efc
+
+    MoodTrackerApp -> User: Error message
+    deactivate MoodTrackerApp
+    activate User #D5DBDB
+
+    group $color_success Succes deactivating account
+
+        Users -> UserRepository: return void
+        deactivate Users
+        activate UserRepository #9cc3f3
+
+        UserRepository -> UserService: return deleteById(id)
+        deactivate UserRepository
+        activate UserService #7c93e5
+
+        UserService -> UserController: return userRepository.deleteById(id)
+        deactivate UserService
+        activate UserController #99ebb9
+
+        UserController -> MoodTrackerApp: return responseEntity
+        deactivate UserController
+        activate MoodTrackerApp #966efc
+
+        MoodTrackerApp -> User: Message account is deactivated
+        MoodTrackerApp -> User: User is directed to registration
+        deactivate MoodTrackerApp
+        deactivate User
+    end
+end
+@enduml

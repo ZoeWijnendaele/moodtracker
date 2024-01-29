@@ -1,0 +1,39 @@
+@startuml
+
+title: Use Case: User Profile
+
+
+!define RECTANGLE class
+
+skinparam usecase {
+    BackgroundColor #D5DBDB
+    BorderColor #B9FD99
+    ArrowColor #49C191
+}
+
+skinparam actor {
+    BackgroundColor #F5B7B1
+    BorderColor #D5DBDB
+}
+
+' Define colors for components
+!define USER_COLOR #D5DBDB
+!define USE_CASE_COLOR #B9FD99
+
+' Actors
+actor :User: USER_COLOR
+
+' Use Cases
+usecase (Account) USE_CASE_COLOR
+usecase (Displaying user information) USE_CASE_COLOR
+usecase (Update user information) USE_CASE_COLOR
+usecase (Update avatar) USE_CASE_COLOR
+usecase (Deactivate account) USE_CASE_COLOR
+
+' Connections
+:User: --> (Account)
+(Account) --> (Displaying user information)
+(Displaying user information) --> (Update user information)
+(Displaying user information) --> (Update avatar)
+(Displaying user information) --> (Deactivate account)
+@enduml

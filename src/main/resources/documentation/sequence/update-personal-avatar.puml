@@ -1,0 +1,100 @@
+@startuml
+title Sequence Diagram: Update personal avatar
+
+actor User #D5DBDB
+boundary MoodTrackerApp #966efc
+control UserController #99ebb9
+control UserService #7c93e5
+database UserRepository #9cc3f3
+entity Users #B1A4A4
+
+!$color_success = '#d7f5b5'
+!$color_failure = '#f19fa4'
+
+participant User
+participant MoodTrackerApp
+participant UserController
+participant UserService
+participant UserRepository
+participant Users
+
+autonumber
+
+User -> MoodTrackerApp: Opens App
+activate User #D5DBDB
+activate MoodTrackerApp #966efc
+MoodTrackerApp -> User: Redirects to calendar
+User -> MoodTrackerApp: User selects profile
+MoodTrackerApp -> User: Displays profile
+User -> MoodTrackerApp: User selects edit personal avatar
+MoodTrackerApp -> User: Displays update personal avatar form
+
+User -> MoodTrackerApp: User submits updated avatar
+deactivate User
+
+
+MoodTrackerApp -> UserController: updateAvatar(Long id, UserDTO userDTO)
+deactivate MoodTrackerApp
+activate UserController #99ebb9
+
+UserController -> UserService: updateAvatar(Long id, UserDTO userDTO)
+deactivate UserController
+activate UserService #7c93e5
+
+UserService -> UserService: Avatar validation
+
+UserService -> UserRepository: updateAvatar(Long id, User user)
+deactivate UserService
+activate UserRepository #9cc3f3
+
+UserRepository -> Users: save(User user)
+deactivate UserRepository
+activate Users #B1A4A4
+
+group $color_failure Failed updating avatar
+
+    Users -> UserRepository: return exception
+    activate UserRepository #9cc3f3
+
+    UserRepository -> UserService: return exception
+    deactivate UserRepository
+    activate UserService #7c93e5
+
+    UserService -> UserController: return exception
+    deactivate UserService
+    activate UserController #99ebb9
+
+    UserController -> MoodTrackerApp: return GlobalExceptionHandler
+    deactivate UserController
+    activate MoodTrackerApp #966efc
+
+    MoodTrackerApp -> User: Error message
+    deactivate MoodTrackerApp
+    activate User #B1A4A4
+
+    group $color_success Succes updating avatar
+
+        Users -> UserRepository: return mood
+        deactivate Users
+        activate UserRepository #9cc3f3
+
+        UserRepository -> UserService: return save(mood)
+        deactivate UserRepository
+        activate UserService #7c93e5
+
+        UserService -> UserController: return mapUserToUserDTO(updatedAvatar)
+        deactivate UserService
+        activate UserController #99ebb9
+
+        UserController -> MoodTrackerApp: return responseEntity
+        deactivate UserController
+        activate MoodTrackerApp #966efc
+
+        MoodTrackerApp -> User: Message avatar is updated
+        MoodTrackerApp -> User: User is directed to profile
+        deactivate MoodTrackerApp
+        deactivate User
+    end
+end
+
+@enduml

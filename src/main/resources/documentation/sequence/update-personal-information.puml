@@ -1,0 +1,143 @@
+@startuml
+title Sequence Diagram: Update personal information
+
+actor User #D5DBDB
+boundary MoodTrackerApp #966efc
+control EmailValidator #80d0a1
+control PasswordValidator #bee959
+control UserController #99ebb9
+control UserService #7c93e5
+database UserRepository #9cc3f3
+entity Users #B1A4A4
+
+!$color_success = '#d7f5b5'
+!$color_failure = '#f19fa4'
+
+participant User
+participant MoodTrackerApp
+participant EmailValidator
+participant PasswordValidator
+participant UserController
+participant UserService
+participant UserRepository
+participant Users
+
+autonumber
+
+User -> MoodTrackerApp: Opens App
+activate User #D5DBDB
+activate MoodTrackerApp #966efc
+MoodTrackerApp -> User: Redirects to calendar
+User -> MoodTrackerApp: User selects profile
+MoodTrackerApp -> User: Displays profile
+User -> MoodTrackerApp: User selects edit personal information
+MoodTrackerApp -> User: Displays update personal information form
+
+User -> MoodTrackerApp: Fill in email
+
+ MoodTrackerApp -> EmailValidator: emailValidator(ValidEmail validEmail)
+activate EmailValidator #80d0a1
+
+group $color_failure Invalid email
+
+    EmailValidator -> MoodTrackerApp: return false
+
+    MoodTrackerApp -> User: Message invalid email
+
+    group $color_success Valid Email
+
+        EmailValidator -> MoodTrackerApp: return true
+        deactivate EmailValidator
+
+        MoodTrackerApp -> User: Valid email
+
+        User -> MoodTrackerApp: Fill in password
+
+        MoodTrackerApp -> PasswordValidator: passwordValidator(ValidPassword validPassword)
+        activate PasswordValidator #bee959
+
+        group $color_failure Invalid password
+
+            PasswordValidator -> MoodTrackerApp: return false
+
+            MoodTrackerApp -> User: Message invalid password
+
+            group $color_success Valid password
+
+                PasswordValidator -> MoodTrackerApp: return true
+                deactivate PasswordValidator
+
+                MoodTrackerApp -> User: Valid email
+
+                User -> MoodTrackerApp: Submit updated personal information form
+                deactivate User
+
+                MoodTrackerApp -> UserController: updateUser(Long id,UserDTO userDTO)
+                deactivate MoodTrackerApp
+                activate UserController #99ebb9
+
+                UserController -> UserService: updateUser(Long id,UserDTO userDTO)
+                deactivate UserController
+                activate UserService #7c93e5
+
+                UserService -> UserRepository: updateUser(Long id, User user)
+                deactivate UserService
+                activate UserRepository #9cc3f3
+
+                UserRepository -> Users: save(User user)
+                deactivate UserRepository
+                activate Users #B1A4A4
+
+                group $color_failure Failed updating personal information
+
+                    Users -> UserRepository: return exception
+                    activate UserRepository #9cc3f3
+
+                    UserRepository -> UserService: return exception
+                    deactivate UserRepository
+                    activate UserService #7c93e5
+
+                    UserService -> UserController: return exception
+                    deactivate UserService
+                    activate UserController #99ebb9
+
+                    UserController -> MoodTrackerApp: return GlobalExceptionHandler
+                    deactivate UserController
+                    activate MoodTrackerApp #966efc
+
+                    MoodTrackerApp -> User: Error message
+                    deactivate MoodTrackerApp
+                    activate User #D5DBDB
+
+                    group $color_success Succes updating personal information
+
+                        Users -> UserRepository: return user
+                        deactivate Users
+                        activate UserRepository #9cc3f3
+
+                        UserRepository -> UserService: return save(user)
+                        deactivate UserRepository
+                        activate UserService #7c93e5
+
+                        UserService -> UserController: return mapUserToUserDTO(user)
+                        deactivate UserService
+                        activate UserController #99ebb9
+
+                        UserController -> MoodTrackerApp: return responseEntity
+                        deactivate UserController
+                        activate MoodTrackerApp #966efc
+
+                        MoodTrackerApp -> User: Message personal information is updated
+                        MoodTrackerApp -> User: User is directed to profile
+                        deactivate MoodTrackerApp
+                        deactivate User
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+
+@enduml

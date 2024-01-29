@@ -1,0 +1,36 @@
+@startuml
+
+title: Use Case: Registration
+
+!define RECTANGLE class
+
+skinparam usecase {
+    BackgroundColor #D5DBDB
+    BorderColor #B9FD99
+    ArrowColor #49C191
+}
+
+skinparam actor {
+    BackgroundColor #F5B7B1
+    BorderColor #D5DBDB
+}
+
+' Define colors for components
+!define USER_COLOR #D5DBDB
+!define USE_CASE_COLOR #B9FD99
+
+' Actors
+actor :User: USER_COLOR
+
+' Use Cases
+usecase (Registration) USE_CASE_COLOR
+usecase (Fill in personal information) USE_CASE_COLOR
+usecase (Submit registration) USE_CASE_COLOR
+usecase (Login) USE_CASE_COLOR
+
+' Connections
+:User: --> (Registration)
+(Registration) --> (Fill in personal information)
+(Fill in personal information) --> (Submit registration)
+(Submit registration) --> (Login)
+@enduml
