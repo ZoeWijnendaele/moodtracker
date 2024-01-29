@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>be.intecbrussel</groupId>
-    <artifactId>moodtracker</artifactId>
+    <artifactId>moodtrackerbackend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>moodtracker</name>
     <description>moodtracker</description>
