@@ -43,12 +43,13 @@ public class Client {
 
     protected Client() { }
 
-    public Client(String email, String password) {
+    public Client(Long clientID, String email, String password, String clientDTOPassword) {
         this.email = email;
         this.password = password;
     }
 
-    public Client(String userName, String email, String password, LocalDate birthday, Avatar avatar) {
+    public Client(Long clientID, String userName, String email, String password, LocalDate birthday, Avatar avatar) {
+        this.clientID = clientID;
         this.userName = userName;
         this.email = email;
         this.password = password;
