@@ -2,9 +2,10 @@ package be.intecbrussel.moodtracker.models;
 
 import be.intecbrussel.moodtracker.models.enums.Avatar;
 import be.intecbrussel.moodtracker.models.enums.Role;
+import be.intecbrussel.moodtracker.validators.ValidEmail;
+import be.intecbrussel.moodtracker.validators.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDate;
@@ -20,9 +21,11 @@ public class Client {
     @NotEmpty(message = "Please provide a username")
     @Column(name = "username")
     private String userName;
-    @Email
+    @ValidEmail
+    @NotEmpty(message = "Please provide a email")
     @Column(name = "email")
     private String email;
+    @ValidPassword
     @NotEmpty(message = "Please provide a password")
     @Column(name = "password")
     private String password;
@@ -43,6 +46,7 @@ public class Client {
     private List<Mood> moods;
 
     protected Client() { }
+
     public Client(Long clientID, String userName, String email, String password) {
         this.clientID = clientID;
         this.userName = userName;
