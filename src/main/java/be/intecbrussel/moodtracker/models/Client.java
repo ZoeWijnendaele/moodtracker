@@ -43,9 +43,9 @@ public class Client {
 
     protected Client() { }
 
-    public Client(Long clientID, String email, String password, String clientDTOPassword) {
+    public Client(Long clientID, String userName, String email, String password) {
+        this.userName = userName;
         this.email = email;
-        this.password = password;
     }
 
     public Client(Long clientID, String userName, String email, String password, LocalDate birthday, Avatar avatar) {
