@@ -15,6 +15,7 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "client_id")
     private Long clientID;
     @NotEmpty(message = "Please provide a username")
     @Column(name = "username")
@@ -42,10 +43,11 @@ public class Client {
     private List<Mood> moods;
 
     protected Client() { }
-
     public Client(Long clientID, String userName, String email, String password) {
+        this.clientID = clientID;
         this.userName = userName;
         this.email = email;
+        this.password = password;
     }
 
     public Client(Long clientID, String userName, String email, String password, LocalDate birthday, Avatar avatar) {

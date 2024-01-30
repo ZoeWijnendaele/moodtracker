@@ -2,7 +2,6 @@ package be.intecbrussel.moodtracker.models.mappers;
 
 import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.dtos.ProfileDTO;
-import org.springframework.context.annotation.Profile;
 
 public class ProfileMapper {
 
@@ -27,4 +26,5 @@ public class ProfileMapper {
                 profileDTO.getBirthday(),
                 profileDTO.getAvatar());
     }
+
 }
