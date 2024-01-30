@@ -1,6 +1,8 @@
 package be.intecbrussel.moodtracker.models.dtos;
 
 import be.intecbrussel.moodtracker.models.enums.Avatar;
+import be.intecbrussel.moodtracker.validators.ValidEmail;
+import be.intecbrussel.moodtracker.validators.ValidPassword;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -14,9 +16,10 @@ public class ProfileDTO {
     @NotEmpty(message = "Please provide a username")
     private String userName;
     @NotEmpty(message = "Please provide a email")
-    @Email
+    @ValidEmail
     private String email;
     @NotEmpty(message = "Please provide a password")
+    @ValidPassword
     private String password;
     @NotEmpty(message= "Please provide a birthday")
     private LocalDate birthday;

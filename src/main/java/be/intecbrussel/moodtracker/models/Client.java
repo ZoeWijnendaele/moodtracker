@@ -47,6 +47,11 @@ public class Client {
 
     protected Client() { }
 
+    public Client(String email, String password, Role role) {
+        this.email = email;
+        this.password = password;
+    }
+
     public Client(Long clientID, String userName, String email, String password) {
         this.clientID = clientID;
         this.userName = userName;

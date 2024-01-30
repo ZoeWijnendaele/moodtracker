@@ -1,5 +1,7 @@
 package be.intecbrussel.moodtracker.models.dtos;
 
+import be.intecbrussel.moodtracker.validators.ValidEmail;
+import be.intecbrussel.moodtracker.validators.ValidPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -9,9 +11,10 @@ public class ClientDTO {
     @NotEmpty(message = "Please provide a username")
     private String userName;
     @NotEmpty(message = "Please provide a email")
-    @Email
+    @ValidEmail
     private String email;
     @NotEmpty(message = "Please provide a password")
+    @ValidPassword
     private String password;
 
     public ClientDTO() {
