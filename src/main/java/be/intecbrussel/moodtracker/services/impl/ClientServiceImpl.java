@@ -1,18 +1,21 @@
 package be.intecbrussel.moodtracker.services.impl;
 
+import be.intecbrussel.moodtracker.exceptions.AuthenticationFailureException;
+import be.intecbrussel.moodtracker.exceptions.ClientPresentInDatabaseException;
 import be.intecbrussel.moodtracker.exceptions.ResourceNotFoundException;
 import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
 import be.intecbrussel.moodtracker.models.dtos.LoginRequest;
 import be.intecbrussel.moodtracker.models.dtos.LoginResponse;
 import be.intecbrussel.moodtracker.models.dtos.ProfileDTO;
-import be.intecbrussel.moodtracker.models.enums.Avatar;
 import be.intecbrussel.moodtracker.models.enums.Role;
 import be.intecbrussel.moodtracker.models.mappers.ClientMapper;
 import be.intecbrussel.moodtracker.models.mappers.ProfileMapper;
 import be.intecbrussel.moodtracker.repositories.ClientRepository;
 import be.intecbrussel.moodtracker.security.JwtUtil;
 import be.intecbrussel.moodtracker.services.ClientService;
+import be.intecbrussel.moodtracker.services.mergers.ClientMergerService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,8 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -31,38 +32,63 @@ import java.util.stream.Collectors;
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
+    private final ClientMergerService clientMergerService;
     private final BCryptPasswordEncoder BCryptPasswordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    public ClientServiceImpl(ClientRepository clientRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                             AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public ClientServiceImpl(ClientRepository clientRepository,
+                             ClientMergerService clientMergerService,
+                             BCryptPasswordEncoder bCryptPasswordEncoder,
+                             AuthenticationManager authenticationManager,
+                             JwtUtil jwtUtil) {
         this.clientRepository = clientRepository;
-        BCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.clientMergerService = clientMergerService;
+        this.BCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
     public void addClient(ProfileDTO profileDTO) {
+        String email = profileDTO.getEmail();
+
+        if (clientRepository.findByEmail(email).isPresent()) {
+            throw new ClientPresentInDatabaseException("Client", "email", email);
+        }
+
         Client client = ProfileMapper.mapProfileDTOToProfile(profileDTO);
+        String encodedPassword = BCryptPasswordEncoder.encode(profileDTO.getPassword());
+        client.setPassword(encodedPassword);
         clientRepository.save(client);
     }
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        String email = authentication.getName();
 
-        Role role = clientRepository.findByEmail(email)
-                .map(Client::getRole)
-                .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            String email = authentication.getName();
 
-        Client client = new Client(email, "", role);
-        String jwtToken = jwtUtil.createAccessToken(client);
+            Role role = clientRepository.findByEmail(email)
+                    .map(client -> {
+                        if (!BCryptPasswordEncoder.matches(loginRequest.getPassword(), client.getPassword())) {
+                            throw new AuthenticationFailureException("Authentication failure");
+                        }
+                        return client.getRole();
+                    })
+                    .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
 
-        return new LoginResponse(email, jwtToken);
+            Client client = new Client(email, "", role);
+            String jwtToken = jwtUtil.createAccessToken(client);
+
+            return new LoginResponse(email, jwtToken);
+        } catch (AuthenticationFailureException authenticationFailureException) {
+            throw new AuthenticationFailureException("Authentication failure");
+        } catch (ResourceNotFoundException resourceNotFoundException) {
+            throw new ResourceNotFoundException("Client", "email", loginRequest.getEmail());
+        }
     }
 
     @Override
@@ -85,27 +111,69 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO getCurrentUSer() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Client client = clientRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
 
-        return ClientMapper.mapClientToClientDTO(client);
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            Client client = clientRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
+
+            return ClientMapper.mapClientToClientDTO(client);
+        } catch (AuthenticationFailureException authenticationFailureException) {
+            throw new AuthenticationFailureException("Authentication failure");
+        } catch (Exception exception) {
+            throw new RuntimeException("An unexpected error occurred", exception);
+        }
     }
 
     @Override
     public Client updateClient(ClientDTO clientDTO) {
-        return null;
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        try {
+            Client client = clientRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
+
+            clientMergerService.mergeClientData(client, clientDTO);
+
+            return clientRepository.save(client);
+        } catch (ResourceNotFoundException resourceNotFoundException) {
+            throw new ResourceNotFoundException("Client", "email", email);
+        } catch (AuthenticationFailureException authenticationFailureException) {
+            throw new AuthenticationFailureException("Authentication failure");
+        }
+
     }
 
     @Override
     public Client updateProfile(ProfileDTO profileDTO) {
-        return null;
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        try {
+            Client clientProfile = clientRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
+
+            clientMergerService.mergeProfileData(clientProfile, profileDTO);
+
+            return clientRepository.save(clientProfile);
+        } catch (ResourceNotFoundException resourceNotFoundException) {
+            throw new ResourceNotFoundException("Client", "email", email);
+        } catch (AuthenticationFailureException authenticationFailureException) {
+            throw new AuthenticationFailureException("Authentication failure");
+        }
+
     }
 
 
+    //TODO: when deleting a client, also delete all associated moods and calendar
     @Override
     public void deleteClient(Long id) {
 
+        try {
+            clientRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+            throw new ResourceNotFoundException("Client", "id", String.valueOf(id));
+        }
     }
 
+    //TODO: Password update + exception PasswordMismatchException
 }
