@@ -65,30 +65,23 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        String email = authentication.getName();
 
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-            String email = authentication.getName();
+        Role role = clientRepository.findByEmail(email)
+                .map(client -> {
+                    if (!BCryptPasswordEncoder.matches(loginRequest.getPassword(), client.getPassword())) {
+                        throw new AuthenticationFailureException("Authentication failure");
+                    }
+                    return client.getRole();
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
 
-            Role role = clientRepository.findByEmail(email)
-                    .map(client -> {
-                        if (!BCryptPasswordEncoder.matches(loginRequest.getPassword(), client.getPassword())) {
-                            throw new AuthenticationFailureException("Authentication failure");
-                        }
-                        return client.getRole();
-                    })
-                    .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
+        Client client = new Client(email, "", role);
+        String jwtToken = jwtUtil.createAccessToken(client);
 
-            Client client = new Client(email, "", role);
-            String jwtToken = jwtUtil.createAccessToken(client);
-
-            return new LoginResponse(email, jwtToken);
-        } catch (AuthenticationFailureException authenticationFailureException) {
-            throw new AuthenticationFailureException("Authentication failure");
-        } catch (ResourceNotFoundException resourceNotFoundException) {
-            throw new ResourceNotFoundException("Client", "email", loginRequest.getEmail());
-        }
+        return new LoginResponse(email, jwtToken);
     }
 
     @Override
