@@ -9,7 +9,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Client {
@@ -35,9 +37,10 @@ public class Client {
     @Enumerated(EnumType.STRING)
     @Column(name = "avatar")
     private Avatar avatar;
+    @ElementCollection
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private Role role;
+    private Set<Role> roles = new HashSet<>();
 
     @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
     private Calendar calendar;
@@ -68,14 +71,14 @@ public class Client {
         this.avatar = avatar;
     }
 
-    public Client(Long clientID, String userName, String email, String password, LocalDate birthday, Avatar avatar, Role role, Calendar calendar, List<Mood> moods) {
+    public Client(Long clientID, String userName, String email, String password, LocalDate birthday, Avatar avatar, Set<Role> roles, Calendar calendar, List<Mood> moods) {
         this.clientID = clientID;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.birthday = birthday;
         this.avatar = avatar;
-        this.role = role;
+        this.roles = roles;
         this.calendar = calendar;
         this.moods = moods;
     }
@@ -124,12 +127,12 @@ public class Client {
         this.avatar = avatar;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRole() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRole(Set<Role> role) {
+        this.roles = role;
     }
 
     public Calendar getCalendar() {

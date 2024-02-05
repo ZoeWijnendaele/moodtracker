@@ -33,7 +33,7 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
     private final ClientMergerService clientMergerService;
-    private final BCryptPasswordEncoder BCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
@@ -44,7 +44,7 @@ public class ClientServiceImpl implements ClientService {
                              JwtUtil jwtUtil) {
         this.clientRepository = clientRepository;
         this.clientMergerService = clientMergerService;
-        this.BCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
@@ -58,30 +58,28 @@ public class ClientServiceImpl implements ClientService {
         }
 
         Client client = ProfileMapper.mapProfileDTOToProfile(profileDTO);
-        String encodedPassword = BCryptPasswordEncoder.encode(profileDTO.getPassword());
+        String encodedPassword = bCryptPasswordEncoder.encode(profileDTO.getPassword());
         client.setPassword(encodedPassword);
         clientRepository.save(client);
     }
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        String email = authentication.getName();
 
-        Role role = clientRepository.findByEmail(email)
-                .map(client -> {
-                    if (!BCryptPasswordEncoder.matches(loginRequest.getPassword(), client.getPassword())) {
-                        throw new AuthenticationFailureException("Authentication failure");
-                    }
-                    return client.getRole();
-                })
-                .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            String email = authentication.getName();
 
-        Client client = new Client(email, "", role);
-        String jwtToken = jwtUtil.createAccessToken(client);
+            Client client = clientRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
 
-        return new LoginResponse(email, jwtToken);
+            String jwtToken = jwtUtil.createAccessToken(client);
+
+            return new LoginResponse(email, jwtToken);
+        } catch (AuthenticationFailureException e) {
+            throw new AuthenticationFailureException("Invalid email or password");
+        }
     }
 
     @Override
@@ -103,19 +101,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO getCurrentUSer() {
+    public ClientDTO getCurrentClient() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        try {
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            Client client = clientRepository.findByEmail(email)
-                    .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
-
-            return ClientMapper.mapClientToClientDTO(client);
-        } catch (AuthenticationFailureException authenticationFailureException) {
-            throw new AuthenticationFailureException("Authentication failure");
-        } catch (Exception exception) {
-            throw new RuntimeException("An unexpected error occurred", exception);
-        }
+        return clientRepository.findByEmail(email)
+                .map(ClientMapper::mapClientToClientDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
     }
 
     @Override
@@ -155,7 +146,6 @@ public class ClientServiceImpl implements ClientService {
         }
 
     }
-
 
     //TODO: when deleting a client, also delete all associated moods and calendar
     @Override

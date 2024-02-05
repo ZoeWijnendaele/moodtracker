@@ -2,43 +2,46 @@ package be.intecbrussel.moodtracker.security;
 
 import be.intecbrussel.moodtracker.models.Client;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpServletRequest;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "mysecretkeymysecretkeymysecretkeymysecretkeymysecretkeymysecretkey";
-    private final long ACCESS_TOKEN_VALIDITY = 60 * 60 * 1000;
+    private final SecretKey KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private final String SECRET_KEY = Encoders.BASE64.encode(KEY.getEncoded());
+    private final long ACCESS_TOKEN_VALIDITY = TimeUnit.HOURS.toMillis(1);
     private final JwtParser jwtParser;
     private final String TOKEN_HEADER = "Authorization";
     private final String TOKEN_PREFIX = "Bearer ";
 
     public JwtUtil() {
         this.jwtParser = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8))).build();
+                .setSigningKey(Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)))
+                .build();
     }
 
     public String createAccessToken(Client client) {
         Claims claims = Jwts.claims().setSubject(client.getEmail());
 
-        claims.put("role", client.getRole().toString());
+        claims.put("role", client.getRole().stream().map(Enum::name).collect(Collectors.toList()));
 
-        Date tokenCreationDate = new Date();
-        Date tokenExpirationDate = new Date(tokenCreationDate.getTime() +
-                TimeUnit.MINUTES.toMillis(ACCESS_TOKEN_VALIDITY));
+        Date tokenValidation= new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY);
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(tokenExpirationDate)
-                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8)),
-                        SignatureAlgorithm.ES256)
+                .setExpiration(tokenValidation)
+                .signWith(KEY, SignatureAlgorithm.HS512)
                 .compact();
     }
 

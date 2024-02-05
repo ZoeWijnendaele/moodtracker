@@ -16,7 +16,7 @@ public interface ClientService {
     LoginResponse login(LoginRequest loginRequest);
     Optional<ClientDTO> getClientById(Long id);
     List<ClientDTO> getAllClients();
-    ClientDTO getCurrentUSer();
+    ClientDTO getCurrentClient();
     Client updateClient(ClientDTO clientDTO);
     Client updateProfile(ProfileDTO profileDTO);
     void deleteClient(Long id);

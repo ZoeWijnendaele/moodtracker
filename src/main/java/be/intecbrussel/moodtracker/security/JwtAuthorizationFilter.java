@@ -1,5 +1,6 @@
 package be.intecbrussel.moodtracker.security;
 
+import be.intecbrussel.moodtracker.models.enums.Role;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -17,10 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -50,17 +49,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             if(claims != null & jwtUtil.validateClaims(claims)) {
                 String email = claims.getSubject();
-                SimpleGrantedAuthority sgAuthority = new SimpleGrantedAuthority(claims.get("role").toString());
-                List<GrantedAuthority> authorityList = new ArrayList<>();
-                authorityList.add(sgAuthority);
+                List<String> rolesAsStrings = claims.get("roles", List.class);
+                Set<Role> roles = rolesAsStrings.stream().map(Role::valueOf).collect(Collectors.toSet());
+                List<GrantedAuthority> authorities = roles.stream()
+                        .map(role -> new SimpleGrantedAuthority(role.name()))
+                        .collect(Collectors.toList());
 
                 Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(email, "", authorityList);
+                        new UsernamePasswordAuthenticationToken(email, "", authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception exception) {
             errors.put("message", "Authentication error");
             errors.put("details", exception.getMessage());
+            errors.put("stackTrace", exception.getStackTrace());
 
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
