@@ -117,7 +117,7 @@ public class ClientServiceImpl implements ClientService {
             Client client = clientRepository.findByEmail(email)
                     .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
 
-            clientMergerService.mergeClientData(client, clientDTO);
+            clientMergerService.mergeClientData(client.getClientID(), clientDTO);
 
             return clientRepository.save(client);
         } catch (ResourceNotFoundException resourceNotFoundException) {
@@ -136,7 +136,7 @@ public class ClientServiceImpl implements ClientService {
             Client clientProfile = clientRepository.findByEmail(email)
                     .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
 
-            clientMergerService.mergeProfileData(clientProfile, profileDTO);
+            clientMergerService.mergeProfileData(clientProfile.getClientID(), profileDTO);
 
             return clientRepository.save(clientProfile);
         } catch (ResourceNotFoundException resourceNotFoundException) {

@@ -26,14 +26,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +39,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientServiceImplTest {
@@ -68,7 +65,6 @@ public class ClientServiceImplTest {
     void setUp() {
         client = new Client(1L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
         profileDTO = new ProfileDTO(2L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
-        clientDTO = new ClientDTO(3L, "Username", "email@example.com", "Password");
     }
 
     @AfterEach
@@ -107,21 +103,21 @@ public class ClientServiceImplTest {
 
     @Test
     public void givenValidLoginRequest_WhenLogin_ThenReturnLoginResponse() {
-        Authentication authentication = mock(Authentication.class);
+        authentication = mock(Authentication.class);
 
         given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .willReturn(authentication);
         given(clientRepository.findByEmail(any())).willReturn(Optional.of(client));
-        given(jwtUtil.createAccessToken(client)).willReturn("Mockedtoken");
+        given(jwtUtil.createAccessToken(client)).willReturn("Mock_token");
 
         LoginRequest loginRequest = new LoginRequest(client.getEmail(), client.getPassword());
         clientService.login(loginRequest);
 
-        LoginResponse loginResponse = new LoginResponse(loginRequest.getEmail(), "Mockedtoken");
+        LoginResponse loginResponse = new LoginResponse(loginRequest.getEmail(), "Mock_token");
 
         assertThat(loginResponse).isNotNull();
         assertThat(loginResponse.getEmail()).isEqualTo("email@example.com");
-        assertThat(loginResponse.getToken()).isEqualTo("Mockedtoken");
+        assertThat(loginResponse.getToken()).isEqualTo("Mock_token");
 
         verify(jwtUtil, times(1)).createAccessToken(client);
     }
