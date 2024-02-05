@@ -125,7 +125,6 @@ public class ClientServiceImpl implements ClientService {
         } catch (AuthenticationFailureException authenticationFailureException) {
             throw new AuthenticationFailureException("Authentication failure");
         }
-
     }
 
     @Override

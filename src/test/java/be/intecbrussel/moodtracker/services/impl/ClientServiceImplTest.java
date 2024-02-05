@@ -2,6 +2,7 @@ package be.intecbrussel.moodtracker.services.impl;
 
 import be.intecbrussel.moodtracker.exceptions.AuthenticationFailureException;
 import be.intecbrussel.moodtracker.exceptions.ClientPresentInDatabaseException;
+import be.intecbrussel.moodtracker.exceptions.MergeFailureException;
 import be.intecbrussel.moodtracker.exceptions.ResourceNotFoundException;
 import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
@@ -65,6 +66,7 @@ public class ClientServiceImplTest {
     void setUp() {
         client = new Client(1L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
         profileDTO = new ProfileDTO(2L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
+        clientDTO = new ClientDTO(1L, "Username", "email@example.com", "Password");
     }
 
     @AfterEach
@@ -243,6 +245,82 @@ public class ClientServiceImplTest {
         assertThatThrownBy(() -> clientService.getCurrentClient())
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Client with email: 'email@example.com' not found in database");
+    }
+
+    @Test
+    public void givenClientDTO_whenUpdateClient_thenReturnClientDTO() {
+        String authenticatedEmail = "email@example.com";
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
+        SecurityContextHolder.setContext(securityContext);
+
+        given(clientRepository.findByEmail(anyString())).willReturn(Optional.of(client));
+        given(clientRepository.save(any(Client.class))).willAnswer(invocation -> invocation.getArgument(0));
+
+        Client updatedClient = clientService.updateClient(clientDTO);
+
+        assertThat(updatedClient).isNotNull();
+        assertThat(updatedClient.getClientID()).isEqualTo(clientDTO.getClientID());
+        assertThat(updatedClient.getUserName()).isEqualTo(clientDTO.getUserName());
+        assertThat(updatedClient.getEmail()).isEqualTo(clientDTO.getEmail());
+        assertThat(updatedClient.getPassword()).isEqualTo(clientDTO.getPassword());
+
+        verify(clientMergerService, times(1)).mergeClientData(client.getClientID(), clientDTO);
+        verify(clientRepository, times(1)).findByEmail(authenticatedEmail);
+        verify(clientRepository, times(1)).save(client);
+    }
+
+    @Test
+    public void givenInvalidClientID_whenUpdateClient_thenReturnResourceNotFoundException() {
+        String invalidEmail = "invalid@example.com";
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(invalidEmail, "Password"));
+        SecurityContextHolder.setContext(securityContext);
+
+        given(clientRepository.findByEmail(invalidEmail)).willReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> clientService.updateClient(clientDTO));
+
+        verify(clientRepository, times(1)).findByEmail(invalidEmail);
+        verify(clientRepository, never()).save(any());
+    }
+
+    @Test
+    public void givenMergeFailure_whenUpdateClient_thenReturnMergeFailureException() {
+        String authenticatedEmail = "email@example.com";
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
+        SecurityContextHolder.setContext(securityContext);
+
+        given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
+        doThrow(new MergeFailureException("Client", "email", authenticatedEmail))
+                .when(clientMergerService).mergeClientData(client.getClientID(), clientDTO);
+
+        MergeFailureException mergeFailureException =
+                assertThrows(MergeFailureException.class, () -> clientService.updateClient(clientDTO));
+
+        assertThat(mergeFailureException.getMessage())
+                .isEqualTo("Client with email: 'email@example.com' not able to merge");
+
+        verify(clientRepository, times(1)).findByEmail(authenticatedEmail);
+        verify(clientMergerService, times(1)).mergeClientData(client.getClientID(), clientDTO);
+        verify(clientRepository, never()).save(any());
+    }
+
+    @Test
+    public void givenException_whenUpdateClient_thenReturnAuthenticationFailureException() {
+        String authenticatedEmail = "email@example.com";
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
+        SecurityContextHolder.setContext(securityContext);
+
+        given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
+        given(clientRepository.save(any(Client.class))).willThrow(RuntimeException.class);
+
+        assertThrows(AuthenticationFailureException.class, () -> clientService.updateClient(clientDTO));
+
+        verify(clientRepository, times(1)).findByEmail(authenticatedEmail);
+        verify(clientRepository, times(1)).save(client);
     }
 
     @Test
