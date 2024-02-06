@@ -1,9 +1,6 @@
 package be.intecbrussel.moodtracker.services.impl;
 
-import be.intecbrussel.moodtracker.exceptions.AuthenticationFailureException;
-import be.intecbrussel.moodtracker.exceptions.ClientPresentInDatabaseException;
-import be.intecbrussel.moodtracker.exceptions.MergeFailureException;
-import be.intecbrussel.moodtracker.exceptions.ResourceNotFoundException;
+import be.intecbrussel.moodtracker.exceptions.*;
 import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
 import be.intecbrussel.moodtracker.models.dtos.LoginRequest;
@@ -16,6 +13,8 @@ import be.intecbrussel.moodtracker.repositories.ClientRepository;
 import be.intecbrussel.moodtracker.security.JwtUtil;
 import be.intecbrussel.moodtracker.services.ClientService;
 import be.intecbrussel.moodtracker.services.mergers.ClientMergerService;
+import be.intecbrussel.moodtracker.validators.EmailValidator;
+import be.intecbrussel.moodtracker.validators.PasswordValidator;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,23 +35,38 @@ public class ClientServiceImpl implements ClientService {
     private final ClientMergerService clientMergerService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final PasswordValidator passwordValidator;
+    private final EmailValidator emailValidator;
     private final JwtUtil jwtUtil;
 
     public ClientServiceImpl(ClientRepository clientRepository,
                              ClientMergerService clientMergerService,
                              BCryptPasswordEncoder bCryptPasswordEncoder,
                              AuthenticationManager authenticationManager,
-                             JwtUtil jwtUtil) {
+                             JwtUtil jwtUtil,
+                             PasswordValidator passwordValidator,
+                             EmailValidator emailValidator) {
         this.clientRepository = clientRepository;
         this.clientMergerService = clientMergerService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.passwordValidator = passwordValidator;
+        this.emailValidator = emailValidator;
     }
 
     @Override
     public void addClient(ProfileDTO profileDTO) {
         String email = profileDTO.getEmail();
+        String password = profileDTO.getPassword();
+
+        if (!emailValidator.isValid(email, null)) {
+            throw new EmailValidateFailureException("Client", "email", email);
+        }
+
+        if (!passwordValidator.isValid(password, null)) {
+            throw new PasswordValidateFailureException("Client", "email", email);
+        }
 
         if (clientRepository.findByEmail(email).isPresent()) {
             throw new ClientPresentInDatabaseException("Client", "email", email);
@@ -161,5 +175,6 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
-    //TODO: Password update + exception PasswordMismatchException
+    //TODO: Password update + exception PasswordMismatchException + password validator
+    //TODO: Email update + exception EmailAlreadyExistsException + email validator
 }
