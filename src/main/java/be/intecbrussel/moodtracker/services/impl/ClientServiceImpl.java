@@ -2,6 +2,7 @@ package be.intecbrussel.moodtracker.services.impl;
 
 import be.intecbrussel.moodtracker.exceptions.AuthenticationFailureException;
 import be.intecbrussel.moodtracker.exceptions.ClientPresentInDatabaseException;
+import be.intecbrussel.moodtracker.exceptions.MergeFailureException;
 import be.intecbrussel.moodtracker.exceptions.ResourceNotFoundException;
 import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
@@ -122,7 +123,9 @@ public class ClientServiceImpl implements ClientService {
             return clientRepository.save(client);
         } catch (ResourceNotFoundException resourceNotFoundException) {
             throw new ResourceNotFoundException("Client", "email", email);
-        } catch (AuthenticationFailureException authenticationFailureException) {
+        } catch (MergeFailureException mergeFailureException) {
+            throw new MergeFailureException("Client", "email", email);
+        } catch (RuntimeException runtimeException) {
             throw new AuthenticationFailureException("Authentication failure");
         }
     }
@@ -140,10 +143,11 @@ public class ClientServiceImpl implements ClientService {
             return clientRepository.save(clientProfile);
         } catch (ResourceNotFoundException resourceNotFoundException) {
             throw new ResourceNotFoundException("Client", "email", email);
-        } catch (AuthenticationFailureException authenticationFailureException) {
+        } catch (MergeFailureException mergeFailureException) {
+            throw new MergeFailureException("Client", "email", email);
+        } catch (RuntimeException runtimeException) {
             throw new AuthenticationFailureException("Authentication failure");
         }
-
     }
 
     //TODO: when deleting a client, also delete all associated moods and calendar

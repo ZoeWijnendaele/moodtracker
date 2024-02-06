@@ -10,7 +10,6 @@ import be.intecbrussel.moodtracker.models.dtos.LoginRequest;
 import be.intecbrussel.moodtracker.models.dtos.LoginResponse;
 import be.intecbrussel.moodtracker.models.dtos.ProfileDTO;
 import be.intecbrussel.moodtracker.models.enums.Avatar;
-import be.intecbrussel.moodtracker.models.mappers.ClientMapper;
 import be.intecbrussel.moodtracker.repositories.ClientRepository;
 import be.intecbrussel.moodtracker.security.JwtUtil;
 import be.intecbrussel.moodtracker.services.mergers.ClientMergerService;
@@ -65,7 +64,7 @@ public class ClientServiceImplTest {
     @BeforeEach
     void setUp() {
         client = new Client(1L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
-        profileDTO = new ProfileDTO(2L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
+        profileDTO = new ProfileDTO(1L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
         clientDTO = new ClientDTO(1L, "Username", "email@example.com", "Password");
     }
 
@@ -286,7 +285,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenMergeFailure_whenUpdateClient_thenReturnMergeFailureException() {
+    public void givenMergeFailureClientDTO_whenUpdateClient_thenReturnMergeFailureException() {
         String authenticatedEmail = "email@example.com";
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
@@ -308,7 +307,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenException_whenUpdateClient_thenReturnAuthenticationFailureException() {
+    public void givenExceptionClientDTO_whenUpdateClient_thenReturnAuthenticationFailureException() {
         String authenticatedEmail = "email@example.com";
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
@@ -318,6 +317,72 @@ public class ClientServiceImplTest {
         given(clientRepository.save(any(Client.class))).willThrow(RuntimeException.class);
 
         assertThrows(AuthenticationFailureException.class, () -> clientService.updateClient(clientDTO));
+
+        verify(clientRepository, times(1)).findByEmail(authenticatedEmail);
+        verify(clientRepository, times(1)).save(client);
+    }
+
+    @Test
+    public void givenValidProfileDTO_whenUpdateProfile_thenReturnProfileDTO() {
+        String authenticatedEmail = "email@example.com";
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
+        given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
+        given(clientRepository.save(any(Client.class))).willAnswer(invocation -> invocation.getArgument(0));
+
+        Client updatedClient = clientService.updateProfile(profileDTO);
+
+        assertThat(updatedClient).isNotNull();
+        assertThat(updatedClient.getClientID()).isEqualTo(profileDTO.getClientID());
+        assertThat(updatedClient.getUserName()).isEqualTo(profileDTO.getUserName());
+        assertThat(updatedClient.getEmail()).isEqualTo(profileDTO.getEmail());
+        assertThat(updatedClient.getPassword()).isEqualTo(profileDTO.getPassword());
+        assertThat(updatedClient.getAvatar()).isEqualTo(profileDTO.getAvatar());
+
+        verify(clientMergerService, times(1)).mergeProfileData(client.getClientID(), profileDTO);
+        verify(clientRepository, times(1)).save(client);
+    }
+
+    @Test
+    public void givenInvalidProfileID_whenUpdateProfile_thenReturnResourceNotFoundException() {
+        String invalidEmail = "invalid@example.com";
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(invalidEmail, "Password"));
+        SecurityContextHolder.setContext(securityContext);
+
+        given(clientRepository.findByEmail(invalidEmail)).willReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> clientService.updateProfile(profileDTO));
+
+        verify(clientRepository, times(1)).findByEmail(invalidEmail);
+        verify(clientRepository, never()).save(any());
+    }
+
+    @Test
+    public void givenMergeFailureProfileDTO_whenUpdateClient_thenReturnMergeFailureException() {
+        String authenticatedEmail = "email@example.com";
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
+        ProfileDTO profileDTO = new ProfileDTO(1L, "UpdatedUsername", "updated@example.com", "UpdatedPassword", null, null);
+        given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
+
+        doThrow(new MergeFailureException("Profile", "email", authenticatedEmail))
+                .when(clientMergerService).mergeProfileData(client.getClientID(), profileDTO);
+
+        assertThrows(MergeFailureException.class, () -> clientService.updateProfile(profileDTO));
+
+        verify(clientMergerService, times(1)).mergeProfileData(client.getClientID(), profileDTO);
+    }
+
+    @Test
+    public void givenExceptionProfileDTO_whenUpdateClient_thenReturnAuthenticationFailureException() {
+        String authenticatedEmail = "email@example.com";
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
+        SecurityContextHolder.setContext(securityContext);
+
+        given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
+        given(clientRepository.save(any(Client.class))).willThrow(RuntimeException.class);
+
+        assertThrows(AuthenticationFailureException.class, () -> clientService.updateProfile(profileDTO));
 
         verify(clientRepository, times(1)).findByEmail(authenticatedEmail);
         verify(clientRepository, times(1)).save(client);
