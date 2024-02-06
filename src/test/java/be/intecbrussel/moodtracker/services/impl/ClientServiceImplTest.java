@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -66,40 +67,56 @@ public class ClientServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        client = new Client(1L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
-        profileDTO = new ProfileDTO(1L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
-        clientDTO = new ClientDTO(1L, "Username", "email@example.com", "Password");
+        client = new Client(1L, "Username", "email@example.com", "Password123?", LocalDate.EPOCH, Avatar.DEFAULT);
+        profileDTO = new ProfileDTO(1L, "Username", "email@example.com", "Password123?", LocalDate.EPOCH, Avatar.DEFAULT);
+        clientDTO = new ClientDTO(1L, "Username", "email@example.com", "Password123?");
     }
 
     @AfterEach
     void tearDown() {
         clientRepository.deleteAll();
+        Mockito.reset(clientRepository, clientMergerService, bCryptPasswordEncoder, authenticationManager, jwtUtil, passwordValidator, emailValidator);
     }
 
     @Test
     public void givenProfileDTO_WhenAddClient_ThenReturnSavedClient() {
+        given(passwordValidator.isValid(client.getPassword(), null)).willReturn(true);
+        given(emailValidator.isValid(profileDTO.getEmail(), null)).willReturn(true);
         given(clientRepository.findByEmail(profileDTO.getEmail())).willReturn(Optional.empty());
-        given(bCryptPasswordEncoder.encode(profileDTO.getPassword())).willReturn("Password");
+        given(bCryptPasswordEncoder.encode(profileDTO.getPassword())).willReturn("Password123?");
         given(clientRepository.save(any(Client.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         clientService.addClient(profileDTO);
 
         assertThat(profileDTO).isNotNull();
-        assertThat(profileDTO.getPassword()).isEqualTo("Password");
+        assertThat(profileDTO.getPassword()).isEqualTo("Password123?");
     }
 
     @Test
     public void givenExistingEmail_WhenAddClient_ThenThrowClientPresentInDatabaseException() {
+        String existingEmail = "email@example.com";
+        profileDTO.setEmail(existingEmail);
+        profileDTO.setPassword(client.getPassword());
+
+        given(passwordValidator.isValid(client.getPassword(), null)).willReturn(true);
+        given(emailValidator.isValid(existingEmail, null)).willReturn(true);
+
         given(clientRepository.findByEmail(profileDTO.getEmail())).willReturn(Optional.of(client));
 
-        assertThrows(ClientPresentInDatabaseException.class, () ->
-                clientService.addClient(profileDTO));
+        ClientPresentInDatabaseException clientPresentInDatabaseException =
+                assertThrows(ClientPresentInDatabaseException.class, () ->
+                        clientService.addClient(profileDTO));
+
+        assertThat(clientPresentInDatabaseException.getMessage())
+                .isEqualTo("Client with email: email@example.com already exists");
+
+        verify(clientRepository, never()).save(any(Client.class));
     }
 
     @Test
     public void givenClientRepositoryError_WhenAddClient_ThenThrowException() {
         given(clientRepository.findByEmail(profileDTO.getEmail())).willReturn(Optional.empty());
-        given(bCryptPasswordEncoder.encode(profileDTO.getPassword())).willReturn("Password");
+        given(bCryptPasswordEncoder.encode(profileDTO.getPassword())).willReturn("Password123?");
         given(clientRepository.save(any(Client.class))).willThrow(RuntimeException.class);
 
         assertThrows(RuntimeException.class, () -> clientService.addClient(profileDTO));
@@ -109,11 +126,17 @@ public class ClientServiceImplTest {
     public void givenInvalidEmail_WhenAddClient_ThenThrowEmailMismatchException() {
         String invalidEmail = "invalidEmail";
         profileDTO.setEmail(invalidEmail);
+        profileDTO.setPassword(client.getPassword());
 
-        assertThrows(EmailMismatchException.class, () ->
+        given(emailValidator.isValid(invalidEmail, null)).willReturn(false);
+        given(passwordValidator.isValid(client.getPassword(), null)).willReturn(true);
+
+        EmailMismatchException emailMismatchException = assertThrows(EmailMismatchException.class, () ->
                 clientService.addClient(profileDTO));
 
-        verify(emailValidator, never()).isValid(any(), any());
+        assertThat(emailMismatchException.getMessage())
+                .isEqualTo("Client with email: 'invalidEmail' not a valid email");
+
         verify(clientRepository, never()).findByEmail(invalidEmail);
         verify(clientRepository, never()).save(any(Client.class));
     }
@@ -121,13 +144,18 @@ public class ClientServiceImplTest {
     @Test
     public void givenInvalidPassword_WhenAddClient_ThenThrowPasswordMismatchException() {
         String invalidPassword = "invalidPassword";
+        profileDTO.setEmail(client.getEmail());
         profileDTO.setPassword(invalidPassword);
 
-        assertThrows(PasswordMismatchException.class, () ->
+        given(emailValidator.isValid(client.getEmail(), null)).willReturn(true);
+        given(passwordValidator.isValid(invalidPassword, null)).willReturn(false);
+
+        PasswordMismatchException passwordMismatchException = assertThrows(PasswordMismatchException.class, () ->
                 clientService.addClient(profileDTO));
 
-        verify(passwordValidator, never()).isValid(any(), any());
-        verify(bCryptPasswordEncoder, never()).encode(invalidPassword);
+        assertThat(passwordMismatchException.getMessage()).isEqualTo("Client with password: 'invalidPassword' not a valid password");
+
+        verify(bCryptPasswordEncoder, never()).encode(anyString());
         verify(clientRepository, never()).save(any(Client.class));
     }
 
