@@ -1,8 +1,8 @@
 package be.intecbrussel.moodtracker.services.mergers;
 
-import be.intecbrussel.moodtracker.exceptions.EmailValidateFailureException;
+import be.intecbrussel.moodtracker.exceptions.EmailMismatchException;
 import be.intecbrussel.moodtracker.exceptions.MergeFailureException;
-import be.intecbrussel.moodtracker.exceptions.PasswordValidateFailureException;
+import be.intecbrussel.moodtracker.exceptions.PasswordMismatchException;
 import be.intecbrussel.moodtracker.exceptions.ResourceNotFoundException;
 import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
@@ -41,16 +41,21 @@ public class ClientMergerService {
         }
     }
 
+    private void validateEmail(String email) {
+        if (!emailValidator.isValid(email, null)) {
+            throw new EmailMismatchException("Client", "email", email);
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (!passwordValidator.isValid(password, null)) {
+            throw new PasswordMismatchException("Client", "password", password);
+        }
+    }
+
     public void mergeProfileData(Long clientID, ProfileDTO profileDTO) {
-
-        if (!emailValidator.isValid(profileDTO.getEmail(), null)) {
-            throw new EmailValidateFailureException("Client", "email", profileDTO.getEmail());
-        }
-
-        if (!passwordValidator.isValid(profileDTO.getPassword(), null)) {
-            throw new PasswordValidateFailureException("Client", "password", profileDTO.getPassword());
-        }
-
+        validateEmail(profileDTO.getEmail());
+        validatePassword(profileDTO.getPassword());
         Optional<Client> optionalClient = clientRepository.findById(clientID);
 
         if (optionalClient.isPresent()) {
@@ -75,15 +80,8 @@ public class ClientMergerService {
     }
 
     public void mergeClientData(Long clientID, ClientDTO clientDTO) {
-
-        if (!emailValidator.isValid(clientDTO.getEmail(), null)) {
-            throw new EmailValidateFailureException("Client", "email", clientDTO.getEmail());
-        }
-
-        if (!passwordValidator.isValid(clientDTO.getPassword(), null)) {
-            throw new PasswordValidateFailureException("Client", "password", clientDTO.getPassword());
-        }
-
+        validateEmail(clientDTO.getEmail());
+        validatePassword(clientDTO.getPassword());
         Optional<Client> optionalClient = clientRepository.findById(clientID);
 
         if (optionalClient.isPresent()) {
