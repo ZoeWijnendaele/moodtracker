@@ -3,9 +3,11 @@ package be.intecbrussel.moodtracker.validators;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
 
+@Component
 public class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
