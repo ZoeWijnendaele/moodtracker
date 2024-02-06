@@ -1,9 +1,6 @@
 package be.intecbrussel.moodtracker.services.impl;
 
-import be.intecbrussel.moodtracker.exceptions.AuthenticationFailureException;
-import be.intecbrussel.moodtracker.exceptions.ClientPresentInDatabaseException;
-import be.intecbrussel.moodtracker.exceptions.MergeFailureException;
-import be.intecbrussel.moodtracker.exceptions.ResourceNotFoundException;
+import be.intecbrussel.moodtracker.exceptions.*;
 import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
 import be.intecbrussel.moodtracker.models.dtos.LoginRequest;
@@ -13,6 +10,8 @@ import be.intecbrussel.moodtracker.models.enums.Avatar;
 import be.intecbrussel.moodtracker.repositories.ClientRepository;
 import be.intecbrussel.moodtracker.security.JwtUtil;
 import be.intecbrussel.moodtracker.services.mergers.ClientMergerService;
+import be.intecbrussel.moodtracker.validators.EmailValidator;
+import be.intecbrussel.moodtracker.validators.PasswordValidator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +54,10 @@ public class ClientServiceImplTest {
     private AuthenticationManager authenticationManager;
     @Mock
     private JwtUtil jwtUtil;
+    @Mock
+    private PasswordValidator passwordValidator;
+    @Mock
+    private EmailValidator emailValidator;
     @InjectMocks
     private ClientServiceImpl clientService;
     private Client client;
@@ -100,6 +103,32 @@ public class ClientServiceImplTest {
         given(clientRepository.save(any(Client.class))).willThrow(RuntimeException.class);
 
         assertThrows(RuntimeException.class, () -> clientService.addClient(profileDTO));
+    }
+
+    @Test
+    public void givenInvalidEmail_WhenAddClient_ThenThrowEmailMismatchException() {
+        String invalidEmail = "invalidEmail";
+        profileDTO.setEmail(invalidEmail);
+
+        assertThrows(EmailMismatchException.class, () ->
+                clientService.addClient(profileDTO));
+
+        verify(emailValidator, never()).isValid(any(), any());
+        verify(clientRepository, never()).findByEmail(invalidEmail);
+        verify(clientRepository, never()).save(any(Client.class));
+    }
+
+    @Test
+    public void givenInvalidPassword_WhenAddClient_ThenThrowPasswordMismatchException() {
+        String invalidPassword = "invalidPassword";
+        profileDTO.setPassword(invalidPassword);
+
+        assertThrows(PasswordMismatchException.class, () ->
+                clientService.addClient(profileDTO));
+
+        verify(passwordValidator, never()).isValid(any(), any());
+        verify(bCryptPasswordEncoder, never()).encode(invalidPassword);
+        verify(clientRepository, never()).save(any(Client.class));
     }
 
     @Test
@@ -270,6 +299,31 @@ public class ClientServiceImplTest {
     }
 
     @Test
+    public void givenInvalidEmail_whenUpdateClient_thenReturnEmailMismatchException() {
+        String invalidEmail = "invalid_email";
+        clientDTO.setEmail(invalidEmail);
+
+        assertThrows(EmailMismatchException.class, () -> clientService.updateClient(clientDTO));
+
+        verify(emailValidator, never()).isValid(invalidEmail, null);
+        verify(clientRepository, never()).findByEmail(invalidEmail);
+        verify(clientMergerService, never()).mergeClientData(anyLong(), any());
+        verify(clientRepository, never()).save(any());
+    }
+
+    @Test
+    public void givenInvalidPassword_whenUpdateClient_thenReturnPasswordMismatchException() {
+        String invalidPassword = "invalid_password";
+        clientDTO.setPassword(invalidPassword);
+
+        assertThrows(PasswordMismatchException.class, () -> clientService.updateClient(clientDTO));
+
+        verify(passwordValidator, never()).isValid(invalidPassword, null);
+        verify(clientMergerService, never()).mergeClientData(anyLong(), any());
+        verify(clientRepository, never()).save(any());
+    }
+
+    @Test
     public void givenInvalidClientID_whenUpdateClient_thenReturnResourceNotFoundException() {
         String invalidEmail = "invalid@example.com";
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
@@ -340,6 +394,31 @@ public class ClientServiceImplTest {
 
         verify(clientMergerService, times(1)).mergeProfileData(client.getClientID(), profileDTO);
         verify(clientRepository, times(1)).save(client);
+    }
+
+    @Test
+    public void givenInvalidEmail_whenUpdateProfile_thenReturnEmailMismatchException() {
+        String invalidEmail = "invalid@example.com";
+        profileDTO.setEmail(invalidEmail);
+
+        assertThrows(EmailMismatchException.class, () -> clientService.updateProfile(profileDTO));
+
+        verify(emailValidator, never()).isValid(invalidEmail, null);
+        verify(clientRepository, never()).findByEmail(any());
+        verify(clientMergerService, never()).mergeProfileData(anyLong(), any());
+        verify(clientRepository, never()).save(any());
+    }
+
+    @Test
+    public void givenInvalidPassword_whenUpdateProfile_thenReturnPasswordMismatchException() {
+        String invalidPassword = "invalidPassword";
+        profileDTO.setPassword(invalidPassword);
+
+        assertThrows(PasswordMismatchException.class, () -> clientService.updateProfile(profileDTO));
+
+        verify(passwordValidator, never()).isValid(invalidPassword, null);
+        verify(clientMergerService, never()).mergeProfileData(anyLong(), any());
+        verify(clientRepository, never()).save(any());
     }
 
     @Test
