@@ -6,7 +6,6 @@ import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
 import be.intecbrussel.moodtracker.models.dtos.LoginRequest;
 import be.intecbrussel.moodtracker.models.dtos.LoginResponse;
 import be.intecbrussel.moodtracker.models.dtos.ProfileDTO;
-import be.intecbrussel.moodtracker.models.enums.Role;
 import be.intecbrussel.moodtracker.models.mappers.ClientMapper;
 import be.intecbrussel.moodtracker.models.mappers.ProfileMapper;
 import be.intecbrussel.moodtracker.repositories.ClientRepository;
@@ -61,11 +60,11 @@ public class ClientServiceImpl implements ClientService {
         String password = profileDTO.getPassword();
 
         if (!emailValidator.isValid(email, null)) {
-            throw new EmailValidateFailureException("Client", "email", email);
+            throw new EmailMismatchException("Client", "email", email);
         }
 
         if (!passwordValidator.isValid(password, null)) {
-            throw new PasswordValidateFailureException("Client", "email", email);
+            throw new PasswordMismatchException("Client", "password", password);
         }
 
         if (clientRepository.findByEmail(email).isPresent()) {
@@ -175,6 +174,4 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
-    //TODO: Password update + exception PasswordMismatchException + password validator
-    //TODO: Email update + exception EmailAlreadyExistsException + email validator
 }

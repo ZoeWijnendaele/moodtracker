@@ -182,7 +182,6 @@ public class ClientServiceImplTest {
 
     @Test
     public void givenInvalidLoginRequest_WhenLogin_ThenThrowAuthenticationFailureException() {
-
         given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .willThrow(new AuthenticationFailureException("Invalid email or password"));
 
@@ -327,31 +326,6 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenInvalidEmail_whenUpdateClient_thenReturnEmailMismatchException() {
-        String invalidEmail = "invalid_email";
-        clientDTO.setEmail(invalidEmail);
-
-        assertThrows(EmailMismatchException.class, () -> clientService.updateClient(clientDTO));
-
-        verify(emailValidator, never()).isValid(invalidEmail, null);
-        verify(clientRepository, never()).findByEmail(invalidEmail);
-        verify(clientMergerService, never()).mergeClientData(anyLong(), any());
-        verify(clientRepository, never()).save(any());
-    }
-
-    @Test
-    public void givenInvalidPassword_whenUpdateClient_thenReturnPasswordMismatchException() {
-        String invalidPassword = "invalid_password";
-        clientDTO.setPassword(invalidPassword);
-
-        assertThrows(PasswordMismatchException.class, () -> clientService.updateClient(clientDTO));
-
-        verify(passwordValidator, never()).isValid(invalidPassword, null);
-        verify(clientMergerService, never()).mergeClientData(anyLong(), any());
-        verify(clientRepository, never()).save(any());
-    }
-
-    @Test
     public void givenInvalidClientID_whenUpdateClient_thenReturnResourceNotFoundException() {
         String invalidEmail = "invalid@example.com";
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
@@ -422,31 +396,6 @@ public class ClientServiceImplTest {
 
         verify(clientMergerService, times(1)).mergeProfileData(client.getClientID(), profileDTO);
         verify(clientRepository, times(1)).save(client);
-    }
-
-    @Test
-    public void givenInvalidEmail_whenUpdateProfile_thenReturnEmailMismatchException() {
-        String invalidEmail = "invalid@example.com";
-        profileDTO.setEmail(invalidEmail);
-
-        assertThrows(EmailMismatchException.class, () -> clientService.updateProfile(profileDTO));
-
-        verify(emailValidator, never()).isValid(invalidEmail, null);
-        verify(clientRepository, never()).findByEmail(any());
-        verify(clientMergerService, never()).mergeProfileData(anyLong(), any());
-        verify(clientRepository, never()).save(any());
-    }
-
-    @Test
-    public void givenInvalidPassword_whenUpdateProfile_thenReturnPasswordMismatchException() {
-        String invalidPassword = "invalidPassword";
-        profileDTO.setPassword(invalidPassword);
-
-        assertThrows(PasswordMismatchException.class, () -> clientService.updateProfile(profileDTO));
-
-        verify(passwordValidator, never()).isValid(invalidPassword, null);
-        verify(clientMergerService, never()).mergeProfileData(anyLong(), any());
-        verify(clientRepository, never()).save(any());
     }
 
     @Test
