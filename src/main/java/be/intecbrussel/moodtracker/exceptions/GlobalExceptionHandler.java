@@ -11,6 +11,45 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(AuthenticationFailureException.class)
+    public ResponseEntity<ErrorDetails> handleAuthenticationFailureException(
+            AuthenticationFailureException exception, WebRequest webRequest) {
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "AUTHENTICATION_FAILURE");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ClientPresentInDatabaseException.class)
+    public ResponseEntity<ErrorDetails> handleClientPresentInDatabaseException(
+            ClientPresentInDatabaseException exception, WebRequest webRequest) {
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "CLIENT_PRESENT_IN_DATABASE");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MergeFailureException.class)
+    public ResponseEntity<ErrorDetails> handleMergeFailureException(
+            MergeFailureException exception, WebRequest webRequest) {
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "MERGE_FAILURE");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(
             ResourceNotFoundException exception, WebRequest webRequest) {
@@ -22,6 +61,33 @@ public class GlobalExceptionHandler {
                 "RESOURCE_NOT_FOUND");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmailMismatchException.class)
+    public ResponseEntity<ErrorDetails> handleEmailMismatchException(
+            EmailMismatchException exception, WebRequest webRequest) {
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "EMAIL_MISMATCH");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<ErrorDetails> handlePasswordMismatchException(
+
+            PasswordMismatchException exception, WebRequest webRequest) {
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "PASSWORD_MISMATCH");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
