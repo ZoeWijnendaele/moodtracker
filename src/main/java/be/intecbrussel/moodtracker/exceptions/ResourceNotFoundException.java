@@ -6,12 +6,12 @@ public class ResourceNotFoundException extends RuntimeException {
 
     private final HttpStatus status = HttpStatus.NOT_FOUND;
 
-    public ResourceNotFoundException(String dataType, String identifierName, String identifierValue) {
-        super("%s with %s: '%s' not found in database".formatted(dataType, identifierName, identifierValue));
+    public ResourceNotFoundException(String resourceName, String fieldName, String fieldValue) {
+        super("%s with %s: '%s' not found in database".formatted(resourceName, fieldName, fieldValue));
     }
 
-    public ResourceNotFoundException(String calendar, Long id, Long calendarId) {
-        super("%s with %s: '%s' not found in database".formatted(calendar, id, calendarId));
+    public ResourceNotFoundException(String resourceName, Long fieldName, Long fieldValue) {
+        super("%s with %s: '%s' not found in database".formatted(resourceName, fieldName, fieldValue));
     }
 
     public HttpStatus getStatus() {
