@@ -243,7 +243,7 @@ public class ClientServiceImplTest {
 
         assertThat(resourceNotFoundException.getMessage())
                 .isEqualTo("Client with id: '1' not found in database");
-        assertThat(resourceNotFoundException.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(resourceNotFoundException).isEqualTo(HttpStatus.NOT_FOUND);
 
         verify(clientRepository).findById(invalidId);
     }
