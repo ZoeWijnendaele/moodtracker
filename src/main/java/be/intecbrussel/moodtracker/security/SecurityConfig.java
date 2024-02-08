@@ -44,8 +44,8 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.OPTIONS).permitAll())
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/login", "/register").permitAll())
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("users/all").hasAuthority("ADMIN"))
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/login", "/register", "/client/**").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/{id}","/client/get/all").hasAuthority("ADMIN"))
 
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

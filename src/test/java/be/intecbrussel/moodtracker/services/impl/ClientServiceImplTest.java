@@ -312,7 +312,7 @@ public class ClientServiceImplTest {
         given(clientRepository.findByEmail(anyString())).willReturn(Optional.of(client));
         given(clientRepository.save(any(Client.class))).willAnswer(invocation -> invocation.getArgument(0));
 
-        Client updatedClient = clientService.updateClient(clientDTO);
+        Client updatedClient = clientService.updateClient(clientDTO, authenticatedEmail);
 
         assertThat(updatedClient).isNotNull();
         assertThat(updatedClient.getClientID()).isEqualTo(clientDTO.getClientID());
@@ -334,7 +334,7 @@ public class ClientServiceImplTest {
 
         given(clientRepository.findByEmail(invalidEmail)).willReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> clientService.updateClient(clientDTO));
+        assertThrows(ResourceNotFoundException.class, () -> clientService.updateClient(clientDTO, invalidEmail));
 
         verify(clientRepository, times(1)).findByEmail(invalidEmail);
         verify(clientRepository, never()).save(any());
@@ -352,7 +352,7 @@ public class ClientServiceImplTest {
                 .when(clientMergerService).mergeClientData(client.getClientID(), clientDTO);
 
         MergeFailureException mergeFailureException =
-                assertThrows(MergeFailureException.class, () -> clientService.updateClient(clientDTO));
+                assertThrows(MergeFailureException.class, () -> clientService.updateClient(clientDTO, authenticatedEmail));
 
         assertThat(mergeFailureException.getMessage())
                 .isEqualTo("Client with email: 'email@example.com' not able to merge");
@@ -372,7 +372,7 @@ public class ClientServiceImplTest {
         given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
         given(clientRepository.save(any(Client.class))).willThrow(RuntimeException.class);
 
-        assertThrows(AuthenticationFailureException.class, () -> clientService.updateClient(clientDTO));
+        assertThrows(AuthenticationFailureException.class, () -> clientService.updateClient(clientDTO, authenticatedEmail));
 
         verify(clientRepository, times(1)).findByEmail(authenticatedEmail);
         verify(clientRepository, times(1)).save(client);
@@ -385,7 +385,7 @@ public class ClientServiceImplTest {
         given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
         given(clientRepository.save(any(Client.class))).willAnswer(invocation -> invocation.getArgument(0));
 
-        Client updatedClient = clientService.updateProfile(profileDTO);
+        Client updatedClient = clientService.updateProfile(profileDTO, authenticatedEmail);
 
         assertThat(updatedClient).isNotNull();
         assertThat(updatedClient.getClientID()).isEqualTo(profileDTO.getClientID());
@@ -407,7 +407,7 @@ public class ClientServiceImplTest {
 
         given(clientRepository.findByEmail(invalidEmail)).willReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> clientService.updateProfile(profileDTO));
+        assertThrows(ResourceNotFoundException.class, () -> clientService.updateProfile(profileDTO, invalidEmail));
 
         verify(clientRepository, times(1)).findByEmail(invalidEmail);
         verify(clientRepository, never()).save(any());
@@ -423,7 +423,7 @@ public class ClientServiceImplTest {
         doThrow(new MergeFailureException("Profile", "email", authenticatedEmail))
                 .when(clientMergerService).mergeProfileData(client.getClientID(), profileDTO);
 
-        assertThrows(MergeFailureException.class, () -> clientService.updateProfile(profileDTO));
+        assertThrows(MergeFailureException.class, () -> clientService.updateProfile(profileDTO, authenticatedEmail));
 
         verify(clientMergerService, times(1)).mergeProfileData(client.getClientID(), profileDTO);
     }
@@ -438,7 +438,7 @@ public class ClientServiceImplTest {
         given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
         given(clientRepository.save(any(Client.class))).willThrow(RuntimeException.class);
 
-        assertThrows(AuthenticationFailureException.class, () -> clientService.updateProfile(profileDTO));
+        assertThrows(AuthenticationFailureException.class, () -> clientService.updateProfile(profileDTO, authenticatedEmail));
 
         verify(clientRepository, times(1)).findByEmail(authenticatedEmail);
         verify(clientRepository, times(1)).save(client);

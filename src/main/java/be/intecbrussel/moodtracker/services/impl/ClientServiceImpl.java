@@ -124,8 +124,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client updateClient(ClientDTO clientDTO) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public Client updateClient(ClientDTO clientDTO, String email) {
 
         try {
             Client client = clientRepository.findByEmail(email)
@@ -144,8 +143,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client updateProfile(ProfileDTO profileDTO) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public Client updateProfile(ProfileDTO profileDTO, String email) {
 
         try {
             Client clientProfile = clientRepository.findByEmail(email)

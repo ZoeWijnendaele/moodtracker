@@ -17,8 +17,8 @@ public interface ClientService {
     Optional<ClientDTO> getClientById(Long id);
     List<ClientDTO> getAllClients();
     ClientDTO getCurrentClient();
-    Client updateClient(ClientDTO clientDTO);
-    Client updateProfile(ProfileDTO profileDTO);
+    Client updateClient(ClientDTO clientDTO, String email);
+    Client updateProfile(ProfileDTO profileDTO, String email);
     void deleteClient(Long id);
 
 }
