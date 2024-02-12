@@ -26,10 +26,9 @@ public enum Emotion {
     FRUSTRATED,
     GRIEF,
     GRATEFUL,
-    GUILT,
+    GUILTY,
     HAPPY,
     HOMESICK,
-    HOPE,
     HOPEFUL,
     HOPELESS,
     INDIFFERENT,
@@ -44,7 +43,7 @@ public enum Emotion {
     OVERWHELMED,
     PENSIVE,
     PRIDE,
-    REGRETFUL,
+    REGRET,
     RELIEVED,
     RESENTFUL,
     SAD,
@@ -52,5 +51,7 @@ public enum Emotion {
     SORROW,
     SURPRISED,
     TRANQUIL,
-    WORRIED
+    UNMOTIVATED,
+    WORRIED,
+
 }
