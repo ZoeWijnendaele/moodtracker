@@ -103,11 +103,11 @@ public class ClientServiceImplTest {
 
         given(clientRepository.findByEmail(profileDTO.getEmail())).willReturn(Optional.of(client));
 
-        ClientPresentInDatabaseException clientPresentInDatabaseException =
-                assertThrows(ClientPresentInDatabaseException.class, () ->
+        PresentInDatabaseException presentInDatabaseException =
+                assertThrows(PresentInDatabaseException.class, () ->
                         clientService.addClient(profileDTO));
 
-        assertThat(clientPresentInDatabaseException.getMessage())
+        assertThat(presentInDatabaseException.getMessage())
                 .isEqualTo("Client with email: email@example.com already exists");
 
         verify(clientRepository, never()).save(any(Client.class));
