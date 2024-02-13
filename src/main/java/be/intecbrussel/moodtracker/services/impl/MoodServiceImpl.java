@@ -31,6 +31,10 @@ public class MoodServiceImpl implements MoodService {
     @Override
     public void addMood(MoodDTO moodDTO) {
 
+        if (moodDTO.getEmotion() == null || moodDTO.getRating() == 0) {
+            throw new IllegalArgumentException("Emotion and Rating cannot be empty");
+        }
+
         if (moodRepository.findByEmotionAndRatingAndDescription(
                 moodDTO.getEmotion(), moodDTO.getRating(), moodDTO.getDescription()).isPresent()) {
             throw new PresentInDatabaseException("Mood", "Emotion, Rating, and Description",
