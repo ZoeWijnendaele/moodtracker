@@ -44,8 +44,9 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.OPTIONS).permitAll())
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/login", "/register", "/client/**").permitAll())
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/{id}","/client/get/all").hasAuthority("ADMIN"))
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**",
+                        "/v2/api-docs/**", "/login", "/register", "/client/**").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/{id}", "/client/get/all").hasAuthority("ADMIN"))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/current_client", "/client/deactivate/{id}").hasAnyAuthority("USER", "ADMIN"))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/update/**").hasAnyAuthority("USER"))
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
