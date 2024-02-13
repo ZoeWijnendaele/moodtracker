@@ -79,7 +79,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenProfileDTO_WhenAddClient_ThenReturnSavedClient() {
+    public void givenProfileDTO_whenAddClient_thenReturnSavedClient() {
         given(passwordValidator.isValid(client.getPassword(), null)).willReturn(true);
         given(emailValidator.isValid(profileDTO.getEmail(), null)).willReturn(true);
         given(clientRepository.findByEmail(profileDTO.getEmail())).willReturn(Optional.empty());
@@ -93,7 +93,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenExistingEmail_WhenAddClient_ThenThrowClientPresentInDatabaseException() {
+    public void givenExistingEmail_whenAddClient_thenThrowPresentInDatabaseException() {
         String existingEmail = "email@example.com";
         profileDTO.setEmail(existingEmail);
         profileDTO.setPassword(client.getPassword());
@@ -215,7 +215,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenClientID_WhenGetClientById_ThenReturnClientDTO() {
+    public void givenClientID_whenGetClientById_thenReturnClientDTO() {
         Long id = 1L;
         Client client = new Client(1L, "Username", "email@example.com", "Password", LocalDate.EPOCH, Avatar.DEFAULT);
 
@@ -224,7 +224,6 @@ public class ClientServiceImplTest {
         Optional<ClientDTO> clientDTO = clientService.getClientById(id);
 
         assertThat(clientDTO).isPresent();
-
         assertThat(clientDTO.get().getClientID()).isEqualTo(client.getClientID());
         assertThat(clientDTO.get().getUserName()).isEqualTo(client.getUserName());
         assertThat(clientDTO.get().getEmail()).isEqualTo(client.getEmail());
@@ -233,7 +232,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenInvalidClientID_WhenGetClientById_ThenThrowResourceNotFoundException() {
+    public void givenInvalidClientID_whenGetClientById_thenThrowResourceNotFoundException() {
         Long invalidId = 1L;
         given(clientRepository.findById(invalidId)).willReturn(Optional.empty());
 
@@ -302,7 +301,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenClientDTO_whenUpdateClient_thenReturnClientDTO() {
+    public void givenClientDTO_whenUpdateClient_thenReturnUpdatedClientDTO() {
         String authenticatedEmail = "email@example.com";
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
