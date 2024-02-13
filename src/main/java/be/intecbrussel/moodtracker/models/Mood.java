@@ -30,11 +30,26 @@ public class Mood {
 
     protected Mood() { }
 
+    public Mood(Long moodID, Emotion emotion, int rating) {
+        this.moodID = moodID;
+        this.emotion = emotion;
+        this.rating = rating;
+    }
+
     public Mood(Long moodID, Emotion emotion, int rating, String description) {
         this.moodID = moodID;
         this.emotion = emotion;
         this.rating = rating;
         this.description = description;
+    }
+
+    public Mood(Long moodID, Emotion emotion, int rating, String description, Client client, Calendar calendar) {
+        this.moodID = moodID;
+        this.emotion = emotion;
+        this.rating = rating;
+        this.description = description;
+        this.client = client;
+        this.calendar = calendar;
     }
 
     public Long getMoodID() {

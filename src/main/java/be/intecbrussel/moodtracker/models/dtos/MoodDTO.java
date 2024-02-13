@@ -17,6 +17,12 @@ public class MoodDTO {
 
     public MoodDTO() { }
 
+    public MoodDTO(Long moodID, Emotion emotion, int rating) {
+        this.moodID = moodID;
+        this.emotion = emotion;
+        this.rating = rating;
+    }
+
     public MoodDTO(Long moodID, Emotion emotion, int rating, String description) {
         this.moodID = moodID;
         this.emotion = emotion;
