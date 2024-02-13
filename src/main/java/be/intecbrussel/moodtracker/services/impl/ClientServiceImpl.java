@@ -68,7 +68,7 @@ public class ClientServiceImpl implements ClientService {
         }
 
         if (clientRepository.findByEmail(email).isPresent()) {
-            throw new ClientPresentInDatabaseException("Client", "email", email);
+            throw new PresentInDatabaseException("Client", "email", email);
         }
 
         Client client = ProfileMapper.mapProfileDTOToProfile(profileDTO);
