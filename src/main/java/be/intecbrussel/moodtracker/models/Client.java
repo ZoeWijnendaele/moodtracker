@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Client {
@@ -44,7 +45,7 @@ public class Client {
 
     @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
     private Calendar calendar;
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Mood> moods;
 
@@ -131,8 +132,10 @@ public class Client {
         return roles;
     }
 
-    public void setRole(Set<Role> role) {
-        this.roles = role;
+    public void setRole(List<String> role) {
+        this.roles = role.stream()
+                .map(Role::valueOf)
+                .collect(Collectors.toSet());
     }
 
     public Calendar getCalendar() {
