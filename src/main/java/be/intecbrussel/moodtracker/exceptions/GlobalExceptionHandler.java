@@ -24,9 +24,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(ClientPresentInDatabaseException.class)
+    @ExceptionHandler(PresentInDatabaseException.class)
     public ResponseEntity<ErrorDetails> handleClientPresentInDatabaseException(
-            ClientPresentInDatabaseException exception, WebRequest webRequest) {
+            PresentInDatabaseException exception, WebRequest webRequest) {
 
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
