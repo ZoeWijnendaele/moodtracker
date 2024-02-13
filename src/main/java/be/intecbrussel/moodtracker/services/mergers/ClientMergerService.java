@@ -14,31 +14,23 @@ import be.intecbrussel.moodtracker.validators.PasswordValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Service
 public class ClientMergerService {
 
     private final ClientRepository clientRepository;
+    private final FieldMergerService fieldMergerService;
     private final PasswordValidator passwordValidator;
     private final EmailValidator emailValidator;
 
     public ClientMergerService(ClientRepository clientRepository,
+                               FieldMergerService fieldMergerService,
                                PasswordValidator passwordValidator,
                                EmailValidator emailValidator) {
+        this.fieldMergerService = fieldMergerService;
         this.clientRepository = clientRepository;
         this.passwordValidator = passwordValidator;
         this.emailValidator = emailValidator;
-    }
-
-    private <T> void mergeFieldIfNotNullAndDifferent(
-            String newFieldValue, Function<T, String> getter, Consumer<String> setter, T existingDto) {
-        String existingValue = getter.apply(existingDto);
-
-        if (newFieldValue != null && !newFieldValue.isEmpty() && !newFieldValue.equals(existingValue)) {
-            setter.accept(newFieldValue);
-        }
     }
 
     private void validateEmail(String email) {
@@ -62,11 +54,11 @@ public class ClientMergerService {
             Client existingClient = optionalClient.get();
 
             try {
-                mergeFieldIfNotNullAndDifferent(profileDTO.getUserName(),
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(profileDTO.getUserName(),
                         ProfileDTO::getUserName, existingClient::setUserName, profileDTO);
-                mergeFieldIfNotNullAndDifferent(profileDTO.getEmail(),
+               fieldMergerService.mergeFieldIfNotNullAndDifferent(profileDTO.getEmail(),
                         ProfileDTO::getEmail, existingClient::setEmail, profileDTO);
-                mergeFieldIfNotNullAndDifferent(profileDTO.getPassword(),
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(profileDTO.getPassword(),
                         ProfileDTO::getPassword, existingClient::setPassword, profileDTO);
                 Optional.ofNullable(profileDTO.getAvatar())
                         .filter(avatar -> avatar != Avatar.NO_CHANGE && !avatar.equals(existingClient.getAvatar()))
@@ -88,11 +80,11 @@ public class ClientMergerService {
             Client existingClient = optionalClient.get();
 
             try {
-                mergeFieldIfNotNullAndDifferent(clientDTO.getUserName(),
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(clientDTO.getUserName(),
                         ClientDTO::getUserName, existingClient::setUserName, clientDTO);
-                mergeFieldIfNotNullAndDifferent(clientDTO.getEmail(),
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(clientDTO.getEmail(),
                         ClientDTO::getEmail, existingClient::setEmail, clientDTO);
-                mergeFieldIfNotNullAndDifferent(clientDTO.getPassword(),
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(clientDTO.getPassword(),
                         ClientDTO::getPassword, existingClient::setPassword, clientDTO);
             } catch (MergeFailureException mergeFailureException) {
                 throw new MergeFailureException("Client", "email", existingClient.getEmail());
