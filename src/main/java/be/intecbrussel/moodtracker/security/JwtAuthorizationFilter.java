@@ -47,7 +47,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             Claims claims = jwtUtil.resolveClaims(request);
 
-            if(claims != null & jwtUtil.validateClaims(claims)) {
+            if(claims != null && jwtUtil.validateClaims(claims)) {
                 String email = claims.getSubject();
                 List<String> rolesAsStrings = claims.get("roles", List.class);
                 Set<Role> roles = rolesAsStrings.stream().map(Role::valueOf).collect(Collectors.toSet());

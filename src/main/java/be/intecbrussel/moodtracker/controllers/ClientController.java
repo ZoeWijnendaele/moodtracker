@@ -23,7 +23,7 @@ public class ClientController {
     }
 
     @GetMapping("/get/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ClientDTO> getClientById(@PathVariable("id") Long id) {
         Optional<ClientDTO> client = clientService.getClientById(id);
         return ResponseEntity.ok(client.orElseThrow(()
@@ -31,7 +31,7 @@ public class ClientController {
     }
 
     @GetMapping("/get/all")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<ClientDTO>> getAllClients() {
         return ResponseEntity.ok(clientService.getAllClients());
     }

@@ -34,7 +34,7 @@ public class JwtUtil {
     public String createAccessToken(Client client) {
         Claims claims = Jwts.claims().setSubject(client.getEmail());
 
-        claims.put("role", client.getRole().stream().map(Enum::name).collect(Collectors.toList()));
+        claims.put("roles", client.getRole().stream().map(Enum::name).collect(Collectors.toList()));
 
         Date tokenValidation= new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY);
 

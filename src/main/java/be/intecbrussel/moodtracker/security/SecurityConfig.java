@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+//@EnableMethodSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -45,14 +44,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.OPTIONS).permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**",
-                        "/v2/api-docs/**", "/login", "/register", "/client/**").permitAll())
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/{id}", "/client/get/all").hasAuthority("ADMIN"))
+                        "/v2/api-docs/**", "/login", "/register").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/{id}", "/client/get/all").hasAuthority("USER"))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/current_client", "/client/deactivate/{id}").hasAnyAuthority("USER", "ADMIN"))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/update/**").hasAnyAuthority("USER"))
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
