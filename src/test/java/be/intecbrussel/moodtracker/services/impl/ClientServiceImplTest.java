@@ -346,11 +346,13 @@ public class ClientServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
 
         given(clientRepository.findByEmail(authenticatedEmail)).willReturn(Optional.of(client));
+
         doThrow(new MergeFailureException("Client", "email", authenticatedEmail))
                 .when(clientMergerService).mergeClientData(client.getClientID(), clientDTO);
 
         MergeFailureException mergeFailureException =
-                assertThrows(MergeFailureException.class, () -> clientService.updateClient(clientDTO, authenticatedEmail));
+                assertThrows(MergeFailureException.class, () ->
+                        clientService.updateClient(clientDTO, authenticatedEmail));
 
         assertThat(mergeFailureException.getMessage())
                 .isEqualTo("Client with email: 'email@example.com' not able to merge");
@@ -427,7 +429,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenExceptionProfileDTO_whenUpdateClient_thenReturnAuthenticationFailureException() {
+    public void givenUnInvalidProfileDTO_whenUpdateClient_thenReturnAuthenticationFailureException() {
         String authenticatedEmail = "email@example.com";
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(authenticatedEmail, "Password"));
@@ -443,7 +445,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void givenClientID_whenDeleteClient_thenReturnEmpty() {
+    public void givenClientID_whenDeleteClient_thenReturnVoid() {
         willDoNothing().given(clientRepository).deleteById(client.getClientID());
         clientService.deleteClient(client.getClientID());
 
