@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/{id}", "/client/get/all").hasAuthority("USER"))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/get/current_client", "/client/deactivate/{id}").hasAnyAuthority("USER", "ADMIN"))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/client/update/**").hasAnyAuthority("USER"))
+                .authorizeHttpRequests((authorize -> authorize.requestMatchers("/mood/add", "/mood/get/{id}", "/mood/get/all", "/mood/update/{id}", "/mood/delete/{id}").hasAnyAuthority("USER")))
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
