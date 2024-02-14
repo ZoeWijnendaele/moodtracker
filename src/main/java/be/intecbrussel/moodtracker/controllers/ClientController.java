@@ -26,6 +26,7 @@ public class ClientController {
 //    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ClientDTO> getClientById(@PathVariable("id") Long id) {
         Optional<ClientDTO> client = clientService.getClientById(id);
+
         return ResponseEntity.ok(client.orElseThrow(()
                 -> new ResourceNotFoundException("Client", "id", String.valueOf(id))));
     }
