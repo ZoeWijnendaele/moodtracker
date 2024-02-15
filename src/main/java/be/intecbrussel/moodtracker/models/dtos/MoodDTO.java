@@ -4,6 +4,7 @@ import be.intecbrussel.moodtracker.models.enums.Emotion;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class MoodDTO {
 
@@ -11,7 +12,7 @@ public class MoodDTO {
     @NotEmpty(message = "Please provide an emotion")
     @Enumerated(EnumType.STRING)
     private Emotion emotion;
-    @NotEmpty(message = "Please provide a rating")
+    @NotNull(message = "Please provide a rating")
     private int rating;
     private String description;
 

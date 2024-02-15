@@ -3,6 +3,7 @@ package be.intecbrussel.moodtracker.models;
 import be.intecbrussel.moodtracker.models.enums.Emotion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Mood {
@@ -15,7 +16,7 @@ public class Mood {
     @Enumerated(EnumType.STRING)
     @Column(name = "emotion")
     private Emotion emotion;
-    @NotEmpty(message = "Please provide a rating")
+    @NotNull(message = "Please provide a rating")
     @Column(name = "rating")
     private int rating;
     @Column(name = "description")
