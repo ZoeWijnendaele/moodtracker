@@ -6,6 +6,7 @@ import be.intecbrussel.moodtracker.validators.ValidPassword;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -20,7 +21,7 @@ public class ProfileDTO {
     @NotEmpty(message = "Please provide a password")
     @ValidPassword
     private String password;
-    @NotEmpty(message= "Please provide a birthday")
+    @NotNull(message= "Please provide a birthday")
     private LocalDate birthday;
     @Enumerated(EnumType.STRING)
     private Avatar avatar;

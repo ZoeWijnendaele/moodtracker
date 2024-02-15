@@ -4,9 +4,9 @@ import be.intecbrussel.moodtracker.models.enums.Avatar;
 import be.intecbrussel.moodtracker.models.enums.Role;
 import be.intecbrussel.moodtracker.validators.ValidEmail;
 import be.intecbrussel.moodtracker.validators.ValidPassword;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public class Client {
     @NotEmpty(message = "Please provide a password")
     @Column(name = "password")
     private String password;
-    @NotEmpty(message= "Please provide a birthday")
+    @NotNull(message= "Please provide a birthday")
     @Column(name = "birthday")
     private LocalDate birthday;
     @Enumerated(EnumType.STRING)
@@ -43,15 +43,14 @@ public class Client {
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
 
-    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "client")
     private Calendar calendar;
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "client")
     private List<Mood> moods;
 
     protected Client() { }
 
-    public Client(String email, String password, Role role) {
+    public Client(String email, String password) {
         this.email = email;
         this.password = password;
     }
