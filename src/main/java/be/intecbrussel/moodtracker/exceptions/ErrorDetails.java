@@ -48,4 +48,14 @@ public class ErrorDetails {
         this.errorCode = errorCode;
     }
 
+    @Override
+    public String toString() {
+        return "ErrorDetails{" +
+                "timestamp=" + timestamp +
+                ", message='" + message + '\'' +
+                ", path='" + path + '\'' +
+                ", errorCode='" + errorCode + '\'' +
+                '}';
+    }
+
 }
