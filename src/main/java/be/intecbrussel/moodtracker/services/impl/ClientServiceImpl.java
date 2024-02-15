@@ -74,6 +74,7 @@ public class ClientServiceImpl implements ClientService {
         Client client = ProfileMapper.mapProfileDTOToProfile(profileDTO);
         String encodedPassword = bCryptPasswordEncoder.encode(profileDTO.getPassword());
         client.setPassword(encodedPassword);
+
         clientRepository.save(client);
     }
 
