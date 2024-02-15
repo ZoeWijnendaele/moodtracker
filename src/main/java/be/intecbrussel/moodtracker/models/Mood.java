@@ -25,9 +25,6 @@ public class Mood {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "client_id")
     private Client client;
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
 
     protected Mood() { }
 
@@ -44,13 +41,12 @@ public class Mood {
         this.description = description;
     }
 
-    public Mood(Long moodID, Emotion emotion, int rating, String description, Client client, Calendar calendar) {
+    public Mood(Long moodID, Emotion emotion, int rating, String description, Client client) {
         this.moodID = moodID;
         this.emotion = emotion;
         this.rating = rating;
         this.description = description;
         this.client = client;
-        this.calendar = calendar;
     }
 
     public Long getMoodID() {
@@ -87,14 +83,6 @@ public class Mood {
 
     public void setClient(Client client) {
         this.client = client;
-    }
-
-    public Calendar getCalendar() {
-        return calendar;
-    }
-
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
     }
 
 }
