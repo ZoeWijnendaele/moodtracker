@@ -18,17 +18,17 @@ public class MoodDTO {
     private int rating;
     private String description;
     private LocalDateTime dateTime;
-    private Client client;
+    private Long clientID;
 
     public MoodDTO() { }
 
-    public MoodDTO(Long moodID, Emotion emotion, int rating, String description, LocalDateTime dateTime, Client client) {
+    public MoodDTO(Long moodID, Emotion emotion, int rating, String description, LocalDateTime dateTime, Long clientID) {
         this.moodID = moodID;
         this.emotion = emotion;
         this.rating = rating;
         this.description = description;
         this.dateTime = dateTime;
-        this.client = client;
+        this.clientID = clientID;
     }
 
     public Long getMoodID() {
@@ -71,12 +71,12 @@ public class MoodDTO {
         this.dateTime = dateTime;
     }
 
-    public Client getClient() {
-        return client;
+    public Long getClientID() {
+        return clientID;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClientID(Long clientID) {
+        this.clientID = clientID;
     }
 
 }
