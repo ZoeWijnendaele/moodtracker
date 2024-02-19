@@ -16,12 +16,9 @@ public class Calendar {
     private Long calendarID;
     @Column(name = "date")
     private LocalDateTime dateTime;
-    @ElementCollection
-    @CollectionTable(name = "calendar_emotions")
-    @MapKeyColumn(name = "date")
-    @Column(name = "emotion")
     @Enumerated(EnumType.STRING)
-    private Map<LocalDate, Emotion> averageEmotions = new HashMap<>();
+    @Column(name = "average_emotion")
+    private Emotion averageEmotion;
 
     @OneToOne
     @JoinColumn(name = "client_id")
@@ -29,8 +26,16 @@ public class Calendar {
 
     protected Calendar() { }
 
-    public Calendar(LocalDateTime date, Client client) {
-        this.dateTime = date;
+    public Calendar(Long calendarID, LocalDateTime dateTime, Emotion averageEmotion) {
+        this.calendarID = calendarID;
+        this.dateTime = dateTime;
+        this.averageEmotion = averageEmotion;
+    }
+
+    public Calendar(Long calendarID, LocalDateTime dateTime, Emotion averageEmotion, Client client) {
+        this.calendarID = calendarID;
+        this.dateTime = dateTime;
+        this.averageEmotion = averageEmotion;
         this.client = client;
     }
 
@@ -38,12 +43,20 @@ public class Calendar {
         return calendarID;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDateTime(LocalDateTime date) {
         this.dateTime = date;
+    }
+
+    public Emotion getAverageEmotion() {
+        return averageEmotion;
+    }
+
+    public void setAverageEmotion(Emotion averageEmotion) {
+        this.averageEmotion = averageEmotion;
     }
 
     public Client getClient() {
