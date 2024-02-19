@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
+
 @Entity
 public class Mood {
 
@@ -12,15 +14,15 @@ public class Mood {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mood_id")
     private Long moodID;
-    @NotEmpty(message = "Please provide an emotion")
     @Enumerated(EnumType.STRING)
     @Column(name = "emotion")
     private Emotion emotion;
-    @NotNull(message = "Please provide a rating")
     @Column(name = "rating")
     private int rating;
     @Column(name = "description")
     private String description;
+    @Column(name = "date")
+    private LocalDate date;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "client_id")
@@ -76,6 +78,13 @@ public class Mood {
     public void setDescription(String description) {
         this.description = description;
     }
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public Client getClient() {
         return client;
@@ -84,5 +93,6 @@ public class Mood {
     public void setClient(Client client) {
         this.client = client;
     }
+
 
 }

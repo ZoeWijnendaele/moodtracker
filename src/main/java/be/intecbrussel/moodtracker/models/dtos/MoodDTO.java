@@ -6,15 +6,16 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
+
 public class MoodDTO {
 
     private Long moodID;
-    @NotEmpty(message = "Please provide an emotion")
     @Enumerated(EnumType.STRING)
     private Emotion emotion;
-    @NotNull(message = "Please provide a rating")
     private int rating;
     private String description;
+    private LocalDate date;
 
     public MoodDTO() { }
 
@@ -61,6 +62,14 @@ public class MoodDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
 }
