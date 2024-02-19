@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,6 +75,8 @@ public class ClientServiceImpl implements ClientService {
         Client client = ProfileMapper.mapProfileDTOToProfile(profileDTO);
         String encodedPassword = bCryptPasswordEncoder.encode(profileDTO.getPassword());
         client.setPassword(encodedPassword);
+
+        client.setRole(Collections.singletonList("USER"));
 
         clientRepository.save(client);
     }
@@ -133,6 +136,12 @@ public class ClientServiceImpl implements ClientService {
 
             clientMergerService.mergeClientData(client.getClientID(), clientDTO);
 
+            if (clientDTO.getPassword() != null) {
+                String encryptedPassword = bCryptPasswordEncoder.encode(clientDTO.getPassword());
+                client.setPassword(encryptedPassword);
+            }
+
+
             return clientRepository.save(client);
         } catch (ResourceNotFoundException resourceNotFoundException) {
             throw new ResourceNotFoundException("Client", "email", email);
@@ -151,6 +160,11 @@ public class ClientServiceImpl implements ClientService {
                     .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
 
             clientMergerService.mergeProfileData(clientProfile.getClientID(), profileDTO);
+
+            if (profileDTO.getPassword() != null) {
+                String encryptedPassword = bCryptPasswordEncoder.encode(profileDTO.getPassword());
+                clientProfile.setPassword(encryptedPassword);
+            }
 
             return clientRepository.save(clientProfile);
         } catch (ResourceNotFoundException resourceNotFoundException) {

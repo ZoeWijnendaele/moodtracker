@@ -8,14 +8,21 @@ import java.util.function.Function;
 @Service
 public class FieldMergerService {
 
-    public <T, U> void mergeFieldIfNotNullAndDifferent(
-            U newFieldValue, Function<T, U> getter,
-            Consumer<U> setter, T existingDto) {
-        U existingValue = getter.apply(existingDto);
+    public <T, U, O> void mergeFieldIfNotNullAndDifferent(
+            U newFieldValue,
+            Function<O, U> getter,
+            Consumer<U> setter,
+            T existingDto,
+            O existingObject
+    ) {
 
-        if (newFieldValue != null && !newFieldValue.equals(existingValue) &&
-                (!(newFieldValue instanceof String) ||
-                        !((String)newFieldValue).isEmpty())) {
+        U existingValue = getter.apply(existingObject);
+
+        if (
+                newFieldValue != null &&
+                !newFieldValue.equals(existingValue) &&
+                (!(newFieldValue instanceof String) || !((String)newFieldValue).isEmpty())
+        ) {
             setter.accept(newFieldValue);
         }
     }

@@ -54,12 +54,18 @@ public class ClientMergerService {
             Client existingClient = optionalClient.get();
 
             try {
-                fieldMergerService.mergeFieldIfNotNullAndDifferent(profileDTO.getUserName(),
-                        ProfileDTO::getUserName, existingClient::setUserName, profileDTO);
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(
+                        profileDTO.getUserName(),
+                        Client::getUserName,
+                        existingClient::setUserName,
+                        profileDTO,
+                        existingClient
+                );
                fieldMergerService.mergeFieldIfNotNullAndDifferent(profileDTO.getEmail(),
-                        ProfileDTO::getEmail, existingClient::setEmail, profileDTO);
+                        Client::getEmail, existingClient::setEmail, profileDTO, existingClient);
                 fieldMergerService.mergeFieldIfNotNullAndDifferent(profileDTO.getPassword(),
-                        ProfileDTO::getPassword, existingClient::setPassword, profileDTO);
+                        Client::getPassword, existingClient::setPassword, profileDTO, existingClient);
+
                 Optional.ofNullable(profileDTO.getAvatar())
                         .filter(avatar -> avatar != Avatar.NO_CHANGE && !avatar.equals(existingClient.getAvatar()))
                         .ifPresent(existingClient::setAvatar);
@@ -81,11 +87,11 @@ public class ClientMergerService {
 
             try {
                 fieldMergerService.mergeFieldIfNotNullAndDifferent(clientDTO.getUserName(),
-                        ClientDTO::getUserName, existingClient::setUserName, clientDTO);
+                        Client::getUserName, existingClient::setUserName, clientDTO, existingClient);
                 fieldMergerService.mergeFieldIfNotNullAndDifferent(clientDTO.getEmail(),
-                        ClientDTO::getEmail, existingClient::setEmail, clientDTO);
+                        Client::getEmail, existingClient::setEmail, clientDTO, existingClient);
                 fieldMergerService.mergeFieldIfNotNullAndDifferent(clientDTO.getPassword(),
-                        ClientDTO::getPassword, existingClient::setPassword, clientDTO);
+                        Client::getPassword, existingClient::setPassword, clientDTO, existingClient);
             } catch (MergeFailureException mergeFailureException) {
                 throw new MergeFailureException("Client", "email", existingClient.getEmail());
             }
