@@ -8,12 +8,9 @@ import jakarta.validation.constraints.NotEmpty;
 public class ClientDTO {
 
     private Long clientID;
-    @NotEmpty(message = "Please provide a username")
     private String userName;
-    @NotEmpty(message = "Please provide a email")
     @ValidEmail
     private String email;
-    @NotEmpty(message = "Please provide a password")
     @ValidPassword
     private String password;
 

@@ -21,18 +21,14 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
     private Long clientID;
-    @NotEmpty(message = "Please provide a username")
     @Column(name = "username")
     private String userName;
     @ValidEmail
-    @NotEmpty(message = "Please provide a email")
     @Column(name = "email")
     private String email;
     @ValidPassword
-    @NotEmpty(message = "Please provide a password")
     @Column(name = "password")
     private String password;
-    @NotNull(message= "Please provide a birthday")
     @Column(name = "birthday")
     private LocalDate birthday;
     @Enumerated(EnumType.STRING)

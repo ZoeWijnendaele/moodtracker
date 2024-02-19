@@ -13,15 +13,11 @@ import java.time.LocalDate;
 public class ProfileDTO {
 
     private Long clientID;
-    @NotEmpty(message = "Please provide a username")
     private String userName;
-    @NotEmpty(message = "Please provide a email")
     @ValidEmail
     private String email;
-    @NotEmpty(message = "Please provide a password")
     @ValidPassword
     private String password;
-    @NotNull(message= "Please provide a birthday")
     private LocalDate birthday;
     @Enumerated(EnumType.STRING)
     private Avatar avatar;
