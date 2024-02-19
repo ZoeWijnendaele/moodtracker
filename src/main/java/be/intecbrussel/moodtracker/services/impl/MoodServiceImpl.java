@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -110,10 +111,21 @@ public class MoodServiceImpl implements MoodService {
 
     @Override
     public Emotion averageEmotion(List<Mood> moods) {
-        return null;
+
+        if (moods.isEmpty()) {
+            throw new ResourceNotFoundException("Mood", "id", String.valueOf(moods));
+        }
+
+        Map<Emotion, Long> emotionCount = moods.stream()
+                .collect(Collectors.groupingBy(Mood::getEmotion, Collectors.counting()));
+
+        Optional<Map.Entry<Emotion, Long>> maxEmotion = emotionCount.entrySet().stream()
+                .max(Map.Entry.comparingByValue());
+
+        return maxEmotion.map(Map.Entry::getKey).orElse(null);
     }
 
-    //TODO: when deleting a mood, update client and calendar
+    //TODO: when deleting a mood, update calendar
     @Override
     public void deleteMood(Long id) {
 
