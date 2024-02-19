@@ -3,7 +3,6 @@ package be.intecbrussel.moodtracker.models.mappers;
 import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.Mood;
 import be.intecbrussel.moodtracker.models.dtos.MoodDTO;
-import jakarta.persistence.EntityNotFoundException;
 
 public class MoodMapper {
 
