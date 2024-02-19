@@ -27,12 +27,21 @@ public class MoodMergerService {
             Mood existingMood = optionalMood.get();
 
             try {
-                fieldMergerService.mergeFieldIfNotNullAndDifferent(moodDTO.getEmotion(),
-                        Mood::getEmotion, existingMood::setEmotion, moodDTO, existingMood);
-                fieldMergerService.mergeFieldIfNotNullAndDifferent(moodDTO.getRating(),
-                        Mood::getRating, existingMood::setRating, moodDTO, existingMood);
-                fieldMergerService.mergeFieldIfNotNullAndDifferent(moodDTO.getDescription(),
-                        Mood::getDescription, existingMood::setDescription, moodDTO, existingMood);
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(
+                        moodDTO.getEmotion(),
+                        Mood::getEmotion,
+                        existingMood::setEmotion,
+                        moodDTO, existingMood);
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(
+                        moodDTO.getRating(),
+                        Mood::getRating,
+                        existingMood::setRating,
+                        moodDTO, existingMood);
+                fieldMergerService.mergeFieldIfNotNullAndDifferent(
+                        moodDTO.getDescription(),
+                        Mood::getDescription,
+                        existingMood::setDescription,
+                        moodDTO, existingMood);
             } catch (MergeFailureException mergeFailureException) {
                 throw new MergeFailureException("Mood", "ID", String.valueOf(existingMood.getMoodID()));
             }
