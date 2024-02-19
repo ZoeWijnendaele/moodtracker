@@ -1,7 +1,12 @@
 package be.intecbrussel.moodtracker.models;
 
+import be.intecbrussel.moodtracker.models.enums.Emotion;
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 public class Calendar {
@@ -11,6 +16,12 @@ public class Calendar {
     private Long calendarID;
     @Column(name = "date")
     private LocalDateTime dateTime;
+    @ElementCollection
+    @CollectionTable(name = "calendar_emotions")
+    @MapKeyColumn(name = "date")
+    @Column(name = "emotion")
+    @Enumerated(EnumType.STRING)
+    private Map<LocalDate, Emotion> averageEmotions = new HashMap<>();
 
     @OneToOne
     @JoinColumn(name = "client_id")

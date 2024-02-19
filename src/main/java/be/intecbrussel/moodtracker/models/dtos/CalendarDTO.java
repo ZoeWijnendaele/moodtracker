@@ -1,41 +1,33 @@
 package be.intecbrussel.moodtracker.models.dtos;
 
-import be.intecbrussel.moodtracker.models.enums.Emotion;
-
 import java.time.LocalDateTime;
 
 public class CalendarDTO {
 
     private Long calendarID;
-    private LocalDateTime date;
-    private Emotion averageMood;
+    private LocalDateTime dateTime;
 
     public CalendarDTO() { }
 
-    public CalendarDTO(Long calendarID, LocalDateTime date, Emotion averageMood) {
+    public CalendarDTO(Long calendarID, LocalDateTime dateTime) {
         this.calendarID = calendarID;
-        this.date = date;
-        this.averageMood = averageMood;
+        this.dateTime = dateTime;
     }
 
     public Long getCalendarID() {
         return calendarID;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public void setCalendarID(Long calendarID) {
+        this.calendarID = calendarID;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public Emotion getAverageMood() {
-        return averageMood;
-    }
-
-    public void setAverageMood(Emotion averageMood) {
-        this.averageMood = averageMood;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
 }
