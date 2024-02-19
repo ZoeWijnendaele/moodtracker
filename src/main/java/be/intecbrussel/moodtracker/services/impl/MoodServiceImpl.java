@@ -3,8 +3,12 @@ package be.intecbrussel.moodtracker.services.impl;
 import be.intecbrussel.moodtracker.exceptions.MergeFailureException;
 import be.intecbrussel.moodtracker.exceptions.PresentInDatabaseException;
 import be.intecbrussel.moodtracker.exceptions.ResourceNotFoundException;
+import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.Mood;
+import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
 import be.intecbrussel.moodtracker.models.dtos.MoodDTO;
+import be.intecbrussel.moodtracker.models.enums.Emotion;
+import be.intecbrussel.moodtracker.models.mappers.ClientMapper;
 import be.intecbrussel.moodtracker.models.mappers.MoodMapper;
 import be.intecbrussel.moodtracker.repositories.MoodRepository;
 import be.intecbrussel.moodtracker.services.MoodService;
@@ -12,6 +16,7 @@ import be.intecbrussel.moodtracker.services.mergers.MoodMergerService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,11 +26,14 @@ public class MoodServiceImpl implements MoodService {
 
     private final MoodRepository moodRepository;
     private final MoodMergerService moodMergerService;
+    private final ClientServiceImpl clientService;
 
     public MoodServiceImpl(MoodRepository moodRepository,
-                           MoodMergerService moodMergerService) {
+                           MoodMergerService moodMergerService,
+                           ClientServiceImpl clientService) {
         this.moodRepository = moodRepository;
         this.moodMergerService = moodMergerService;
+        this.clientService = clientService;
     }
 
     @Override
@@ -35,13 +43,16 @@ public class MoodServiceImpl implements MoodService {
             throw new IllegalArgumentException("Emotion and Rating cannot be empty");
         }
 
+        ClientDTO currentClientDTO = clientService.getCurrentClient();
+        Client client = ClientMapper.mapClientDTOToClient(currentClientDTO);
+
         if (moodRepository.findByEmotionAndRatingAndDescription(
                 moodDTO.getEmotion(), moodDTO.getRating(), moodDTO.getDescription()).isPresent()) {
             throw new PresentInDatabaseException("Mood", "Emotion, Rating, and Description",
                     String.format("(%s, %d, %s)", moodDTO.getEmotion(), moodDTO.getRating(), moodDTO.getDescription()));
         }
 
-        Mood mood = MoodMapper.mapMoodDTOToMood(moodDTO);
+        Mood mood = new Mood(moodDTO.getMoodID(), moodDTO.getEmotion(), moodDTO.getRating(), moodDTO.getDescription(), LocalDateTime.now(), client);
         moodRepository.save(mood);
     }
 
@@ -65,6 +76,22 @@ public class MoodServiceImpl implements MoodService {
     }
 
     @Override
+    public List<Mood> getMoodsForDate(Client client, LocalDateTime dateTime) {
+        if (client == null || dateTime == null) {
+            throw new IllegalArgumentException("Client or date cannot be empty");
+        }
+
+        List<Mood> moods = moodRepository.findByClientAndDateTime(client, dateTime);
+
+        if (moods.isEmpty()) {
+            throw new ResourceNotFoundException("Moods", "Client ID",
+                    client.getClientID(), dateTime.toLocalDate().toEpochDay());
+        }
+
+        return moods;
+    }
+
+    @Override
     public Mood updateMood(MoodDTO moodDTO, Long id) {
 
         try {
@@ -80,6 +107,11 @@ public class MoodServiceImpl implements MoodService {
         } catch (MergeFailureException mergeFailureException) {
             throw new MergeFailureException("Mood", "id", String.valueOf(id));
         }
+    }
+
+    @Override
+    public Emotion averageEmotion(List<Mood> moods) {
+        return null;
     }
 
     //TODO: when deleting a mood, update client and calendar
