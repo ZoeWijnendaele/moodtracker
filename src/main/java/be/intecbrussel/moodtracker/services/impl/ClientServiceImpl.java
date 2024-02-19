@@ -110,6 +110,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public Optional<Client> getClientByIdForMood(Long id) {
+        return clientRepository.findById(id)
+                .map(Optional::of)
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "id", String.valueOf(id)));
+    }
+
+    @Override
     public List<ClientDTO> getAllClients() {
         List<Client> clients = clientRepository.findAll();
 

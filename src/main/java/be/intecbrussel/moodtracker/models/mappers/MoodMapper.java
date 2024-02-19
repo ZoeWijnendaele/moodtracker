@@ -11,7 +11,9 @@ public class MoodMapper {
                 mood.getMoodID(),
                 mood.getEmotion(),
                 mood.getRating(),
-                mood.getDescription());
+                mood.getDescription(),
+                mood.getDateTime(),
+                mood.getClient());
     }
 
     public static Mood mapMoodDTOToMood(MoodDTO moodDTO) {
@@ -20,7 +22,9 @@ public class MoodMapper {
                 moodDTO.getMoodID(),
                 moodDTO.getEmotion(),
                 moodDTO.getRating(),
-                moodDTO.getDescription());
+                moodDTO.getDescription(),
+                moodDTO.getDateTime(),
+                moodDTO.getClient());
     }
 
 }

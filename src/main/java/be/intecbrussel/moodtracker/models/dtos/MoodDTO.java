@@ -1,5 +1,6 @@
 package be.intecbrussel.moodtracker.models.dtos;
 
+import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.enums.Emotion;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class MoodDTO {
 
@@ -15,21 +17,18 @@ public class MoodDTO {
     private Emotion emotion;
     private int rating;
     private String description;
-    private LocalDate date;
+    private LocalDateTime dateTime;
+    private Client client;
 
     public MoodDTO() { }
 
-    public MoodDTO(Long moodID, Emotion emotion, int rating) {
-        this.moodID = moodID;
-        this.emotion = emotion;
-        this.rating = rating;
-    }
-
-    public MoodDTO(Long moodID, Emotion emotion, int rating, String description) {
+    public MoodDTO(Long moodID, Emotion emotion, int rating, String description, LocalDateTime dateTime, Client client) {
         this.moodID = moodID;
         this.emotion = emotion;
         this.rating = rating;
         this.description = description;
+        this.dateTime = dateTime;
+        this.client = client;
     }
 
     public Long getMoodID() {
@@ -64,12 +63,20 @@ public class MoodDTO {
         this.description = description;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
 }

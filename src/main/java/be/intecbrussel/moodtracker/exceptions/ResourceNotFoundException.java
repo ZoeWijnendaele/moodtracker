@@ -2,6 +2,8 @@ package be.intecbrussel.moodtracker.exceptions;
 
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
+
 public class ResourceNotFoundException extends RuntimeException {
 
     private final HttpStatus status = HttpStatus.NOT_FOUND;
@@ -15,7 +17,7 @@ public class ResourceNotFoundException extends RuntimeException {
     }
 
     public ResourceNotFoundException(String resourceName, String fieldName, Long fieldValue1, Long fieldValue2) {
-        super(String.format("%s with %s: '%s' not found in database", resourceName, fieldName, fieldValue1));
+        super(String.format("%s with %s: '%s' not found in database", resourceName, fieldName, LocalDateTime.now()));
     }
 
     public HttpStatus getStatus() {

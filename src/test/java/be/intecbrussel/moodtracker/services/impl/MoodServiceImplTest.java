@@ -3,6 +3,7 @@ package be.intecbrussel.moodtracker.services.impl;
 import be.intecbrussel.moodtracker.exceptions.MergeFailureException;
 import be.intecbrussel.moodtracker.exceptions.PresentInDatabaseException;
 import be.intecbrussel.moodtracker.exceptions.ResourceNotFoundException;
+import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.Mood;
 import be.intecbrussel.moodtracker.models.dtos.MoodDTO;
 import be.intecbrussel.moodtracker.models.enums.Emotion;
@@ -19,10 +20,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.LOCAL_DATE_TIME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
@@ -34,15 +37,19 @@ class MoodServiceImplTest {
     private MoodRepository moodRepository;
     @Mock
     private MoodMergerService moodMergerService;
+    @Mock
+    private ClientServiceImpl clientService;
     @InjectMocks
     private MoodServiceImpl moodService;
+    private Client client;
     private Mood mood;
     private MoodDTO moodDTO;
 
     @BeforeEach
     void setUp() {
+        client = new Client(1L, "John", "Doe@gmail.com", "password123?");
         mood = new Mood(1L, Emotion.AMUSED, 5, "I am happy");
-        moodDTO = new MoodDTO(1L, Emotion.AMUSED, 5, "I am happy");
+//        moodDTO = new MoodDTO(1L, mood.getClient(), Emotion.AMUSED, 5, "I am happy", LocalDateTime.now());
     }
 
     @AfterEach

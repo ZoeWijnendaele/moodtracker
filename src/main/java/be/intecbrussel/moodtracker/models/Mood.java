@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Mood {
@@ -22,7 +23,7 @@ public class Mood {
     @Column(name = "description")
     private String description;
     @Column(name = "date")
-    private LocalDate date;
+    private LocalDateTime dateTime;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "client_id")
@@ -43,11 +44,12 @@ public class Mood {
         this.description = description;
     }
 
-    public Mood(Long moodID, Emotion emotion, int rating, String description, Client client) {
+    public Mood(Long moodID, Emotion emotion, int rating, String description, LocalDateTime dateTime, Client client) {
         this.moodID = moodID;
         this.emotion = emotion;
         this.rating = rating;
         this.description = description;
+        this.dateTime = LocalDateTime.now();
         this.client = client;
     }
 
@@ -78,12 +80,13 @@ public class Mood {
     public void setDescription(String description) {
         this.description = description;
     }
-    public LocalDate getDate() {
-        return date;
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Client getClient() {
@@ -93,6 +96,5 @@ public class Mood {
     public void setClient(Client client) {
         this.client = client;
     }
-
 
 }

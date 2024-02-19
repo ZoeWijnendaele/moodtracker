@@ -15,6 +15,7 @@ public interface ClientService {
     void addClient(ProfileDTO profileDTO);
     LoginResponse login(LoginRequest loginRequest);
     Optional<ClientDTO> getClientById(Long id);
+    Optional<Client> getClientByIdForMood(Long id);
     List<ClientDTO> getAllClients();
     ClientDTO getCurrentClient();
     Client updateClient(ClientDTO clientDTO, String email);
