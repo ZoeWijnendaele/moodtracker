@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface MoodRepository extends JpaRepository<Mood, Long> {
 
     Optional<Mood> findByEmotionAndRatingAndDescription(Emotion emotion, int rating, String description);
-    List<Mood> findByClientAndDateTime(Client client, LocalDateTime dateTime);
+    List<Mood> findMoodByClient(Client client);
 
 }
