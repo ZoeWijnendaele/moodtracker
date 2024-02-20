@@ -2,10 +2,7 @@ package be.intecbrussel.moodtracker.services.impl;
 
 import be.intecbrussel.moodtracker.exceptions.*;
 import be.intecbrussel.moodtracker.models.Client;
-import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
-import be.intecbrussel.moodtracker.models.dtos.LoginRequest;
-import be.intecbrussel.moodtracker.models.dtos.LoginResponse;
-import be.intecbrussel.moodtracker.models.dtos.ProfileDTO;
+import be.intecbrussel.moodtracker.models.dtos.*;
 import be.intecbrussel.moodtracker.models.mappers.ClientMapper;
 import be.intecbrussel.moodtracker.models.mappers.ProfileMapper;
 import be.intecbrussel.moodtracker.repositories.ClientRepository;
@@ -22,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +36,7 @@ public class ClientServiceImpl implements ClientService {
     private final PasswordValidator passwordValidator;
     private final EmailValidator emailValidator;
     private final JwtUtil jwtUtil;
+    private final CalendarServiceImpl calendarService;
 
     public ClientServiceImpl(ClientRepository clientRepository,
                              ClientMergerService clientMergerService,
@@ -45,7 +44,8 @@ public class ClientServiceImpl implements ClientService {
                              AuthenticationManager authenticationManager,
                              JwtUtil jwtUtil,
                              PasswordValidator passwordValidator,
-                             EmailValidator emailValidator) {
+                             EmailValidator emailValidator,
+                             CalendarServiceImpl calendarService) {
         this.clientRepository = clientRepository;
         this.clientMergerService = clientMergerService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -53,6 +53,7 @@ public class ClientServiceImpl implements ClientService {
         this.jwtUtil = jwtUtil;
         this.passwordValidator = passwordValidator;
         this.emailValidator = emailValidator;
+        this.calendarService = calendarService;
     }
 
     @Override
@@ -79,6 +80,11 @@ public class ClientServiceImpl implements ClientService {
         client.setRole(Collections.singletonList("USER"));
 
         clientRepository.save(client);
+
+        CalendarDTO calendarDTO = new CalendarDTO();
+        calendarDTO.setDateTime(LocalDateTime.now());
+        calendarDTO.setClientID(client.getClientID());
+        calendarService.addCalendar(calendarDTO);
     }
 
     @Override

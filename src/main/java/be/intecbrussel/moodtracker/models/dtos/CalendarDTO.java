@@ -9,13 +9,15 @@ public class CalendarDTO {
     private Long calendarID;
     private LocalDateTime dateTime;
     private Emotion averageEmotion;
+    private Long clientID;
 
     public CalendarDTO() { }
 
-    public CalendarDTO(Long calendarID, LocalDateTime dateTime, Emotion averageEmotion) {
+    public CalendarDTO(Long calendarID, LocalDateTime dateTime, Emotion averageEmotion, Long clientID) {
         this.calendarID = calendarID;
         this.dateTime = dateTime;
         this.averageEmotion = averageEmotion;
+        this.clientID = clientID;
     }
 
     public Long getCalendarID() {
@@ -40,6 +42,14 @@ public class CalendarDTO {
 
     public void setAverageEmotion(Emotion averageEmotion) {
         this.averageEmotion = averageEmotion;
+    }
+
+    public Long getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(Long clientID) {
+        this.clientID = clientID;
     }
 
 }

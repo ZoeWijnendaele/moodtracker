@@ -43,8 +43,11 @@ public class MoodServiceImpl implements MoodService {
             throw new IllegalArgumentException("Emotion and Rating cannot be empty");
         }
 
-        ClientDTO currentClientDTO = clientService.getCurrentClient();
-        Client client = ClientMapper.mapClientDTOToClient(currentClientDTO);
+        Optional<Client> currentClient = clientService.getClientByIdForMood(moodDTO.getClientID());
+
+        if (currentClient.isEmpty()) {
+            throw new ResourceNotFoundException("Client", "id", String.valueOf(moodDTO.getClientID()));
+        }
 
         if (moodRepository.findByEmotionAndRatingAndDescription(
                 moodDTO.getEmotion(), moodDTO.getRating(), moodDTO.getDescription()).isPresent()) {
@@ -52,7 +55,7 @@ public class MoodServiceImpl implements MoodService {
                     String.format("(%s, %d, %s)", moodDTO.getEmotion(), moodDTO.getRating(), moodDTO.getDescription()));
         }
 
-        Mood mood = new Mood(moodDTO.getMoodID(), moodDTO.getEmotion(), moodDTO.getRating(), moodDTO.getDescription(), LocalDateTime.now(), client);
+        Mood mood = new Mood(moodDTO.getMoodID(), moodDTO.getEmotion(), moodDTO.getRating(), moodDTO.getDescription(), LocalDateTime.now(), currentClient.get());
         moodRepository.save(mood);
     }
 
@@ -76,19 +79,8 @@ public class MoodServiceImpl implements MoodService {
     }
 
     @Override
-    public List<Mood> getMoodsForDate(Client client, LocalDateTime dateTime) {
-        if (client == null || dateTime == null) {
-            throw new IllegalArgumentException("Client or date cannot be empty");
-        }
-
-        List<Mood> moods = moodRepository.findByClientAndDateTime(client, dateTime);
-
-        if (moods.isEmpty()) {
-            throw new ResourceNotFoundException("Moods", "Client ID",
-                    client.getClientID(), dateTime.toLocalDate().toEpochDay());
-        }
-
-        return moods;
+    public List<Mood> getAllMoodsByClient(Client client) {
+        return moodRepository.findMoodByClient(client);
     }
 
     @Override

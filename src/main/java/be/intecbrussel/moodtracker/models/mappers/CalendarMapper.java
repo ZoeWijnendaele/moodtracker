@@ -10,7 +10,8 @@ public class CalendarMapper {
         return new CalendarDTO(
                 calendar.getCalendarID(),
                 calendar.getDateTime(),
-                calendar.getAverageEmotion());
+                calendar.getAverageEmotion(),
+                calendar.getClient().getClientID());
     }
 
     public static Calendar mapCalendarDTOToCalendar(CalendarDTO calendarDTO) {
@@ -19,6 +20,6 @@ public class CalendarMapper {
                 calendarDTO.getCalendarID(),
                 calendarDTO.getDateTime(),
                 calendarDTO.getAverageEmotion());
-
     }
+
 }
