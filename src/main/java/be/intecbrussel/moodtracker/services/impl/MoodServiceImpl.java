@@ -13,6 +13,8 @@ import be.intecbrussel.moodtracker.models.mappers.MoodMapper;
 import be.intecbrussel.moodtracker.repositories.MoodRepository;
 import be.intecbrussel.moodtracker.services.MoodService;
 import be.intecbrussel.moodtracker.services.mergers.MoodMergerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,7 @@ public class MoodServiceImpl implements MoodService {
 
     public MoodServiceImpl(MoodRepository moodRepository,
                            MoodMergerService moodMergerService,
-                           ClientServiceImpl clientService) {
+                           @Lazy ClientServiceImpl clientService) {
         this.moodRepository = moodRepository;
         this.moodMergerService = moodMergerService;
         this.clientService = clientService;

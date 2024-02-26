@@ -10,6 +10,7 @@ import be.intecbrussel.moodtracker.models.enums.Emotion;
 import be.intecbrussel.moodtracker.models.mappers.CalendarMapper;
 import be.intecbrussel.moodtracker.repositories.CalendarRepository;
 import be.intecbrussel.moodtracker.services.CalendarService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class CalendarServiceImpl implements CalendarService {
     private final MoodServiceImpl moodService;
     private final ClientServiceImpl clientService;
 
-    public CalendarServiceImpl(CalendarRepository calendarRepository, MoodServiceImpl moodService, ClientServiceImpl clientService) {
+    public CalendarServiceImpl(CalendarRepository calendarRepository, @Lazy MoodServiceImpl moodService, @Lazy ClientServiceImpl clientService) {
         this.calendarRepository = calendarRepository;
         this.moodService = moodService;
         this.clientService = clientService;
@@ -49,7 +50,7 @@ public class CalendarServiceImpl implements CalendarService {
                 .map(CalendarMapper::mapCalendarToCalendarDTO)
                 .map(Optional::of)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                    "Calendar", "id", String.valueOf(id)));
+                        "Calendar", "id", String.valueOf(id)));
     }
 
     @Override
@@ -93,4 +94,5 @@ public class CalendarServiceImpl implements CalendarService {
     public void deleteCalendar(Long id) {
 
     }
+
 }

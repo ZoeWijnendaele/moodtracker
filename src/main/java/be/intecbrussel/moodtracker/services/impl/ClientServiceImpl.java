@@ -11,6 +11,7 @@ import be.intecbrussel.moodtracker.services.ClientService;
 import be.intecbrussel.moodtracker.services.mergers.ClientMergerService;
 import be.intecbrussel.moodtracker.validators.EmailValidator;
 import be.intecbrussel.moodtracker.validators.PasswordValidator;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,7 +46,7 @@ public class ClientServiceImpl implements ClientService {
                              JwtUtil jwtUtil,
                              PasswordValidator passwordValidator,
                              EmailValidator emailValidator,
-                             CalendarServiceImpl calendarService) {
+                             @Lazy CalendarServiceImpl calendarService) {
         this.clientRepository = clientRepository;
         this.clientMergerService = clientMergerService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
