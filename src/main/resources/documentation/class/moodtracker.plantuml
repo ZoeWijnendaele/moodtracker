@@ -1,0 +1,531 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AuthenticationController {
+  - clientService: ClientServiceImpl
+  + login(LoginRequest): ResponseEntity<LoginResponse>
+  + register(ProfileDTO): ResponseEntity<Client>
+}
+class AuthenticationFailureException
+enum Avatar << enumeration >> {
+  + DEFAULT: 
+  + NO_CHANGE: 
+  + OPTION1: 
+  + OPTION2: 
+  + OPTION3: 
+  + OPTION4: 
+  + OPTION5: 
+  + valueOf(String): Avatar
+  + values(): Avatar[]
+}
+class Calendar {
+  - averageEmotion: Emotion
+  - calendarID: Long
+  - client: Client
+  - dateTime: LocalDateTime
+  + getAverageEmotion(): Emotion
+  + getCalendarID(): Long
+  + getClient(): Client
+  + getDateTime(): LocalDateTime
+  + setAverageEmotion(Emotion): void
+  + setClient(Client): void
+  + setDateTime(LocalDateTime): void
+}
+class CalendarDTO {
+  - averageEmotion: Emotion
+  - calendarID: Long
+  - clientID: Long
+  - dateTime: LocalDateTime
+  + getAverageEmotion(): Emotion
+  + getCalendarID(): Long
+  + getClientID(): Long
+  + getDateTime(): LocalDateTime
+  + setAverageEmotion(Emotion): void
+  + setCalendarID(Long): void
+  + setClientID(Long): void
+  + setDateTime(LocalDateTime): void
+}
+class CalendarMapper {
+  + mapCalendarDTOToCalendar(CalendarDTO): Calendar
+  + mapCalendarToCalendarDTO(Calendar): CalendarDTO
+}
+interface CalendarRepository << interface >>
+interface CalendarService << interface >> {
+  + addCalendar(CalendarDTO): void
+  + deleteCalendar(Long): void
+  + getAllCalendars(): List<CalendarDTO>
+  + getCalendarById(Long): Optional<CalendarDTO>
+  + getClientCalendarWithAverageEmotion(Client, LocalDateTime): CalendarDTO
+  + getCurrentCalendar(Client, LocalDateTime): Calendar
+  + updateCalendar(Calendar): Calendar
+}
+class CalendarServiceImpl {
+  - calendarRepository: CalendarRepository
+  - clientService: ClientServiceImpl
+  - moodService: MoodServiceImpl
+  + addCalendar(CalendarDTO): void
+  + deleteCalendar(Long): void
+  + getAllCalendars(): List<CalendarDTO>
+  + getCalendarById(Long): Optional<CalendarDTO>
+  + getClientCalendarWithAverageEmotion(Client, LocalDateTime): CalendarDTO
+  + getCurrentCalendar(Client, LocalDateTime): Calendar
+  + updateCalendar(Calendar): Calendar
+}
+class Client {
+  - avatar: Avatar
+  - birthday: LocalDate
+  - calendar: Calendar
+  - clientID: Long
+  - email: String
+  - moods: List<Mood>
+  - password: String
+  - roles: Set<Role>
+  - userName: String
+  + getAvatar(): Avatar
+  + getBirthday(): LocalDate
+  + getCalendar(): Calendar
+  + getClientID(): Long
+  + getEmail(): String
+  + getMoods(): List<Mood>
+  + getPassword(): String
+  + getRole(): Set<Role>
+  + getUserName(): String
+  + setAvatar(Avatar): void
+  + setBirthday(LocalDate): void
+  + setCalendar(Calendar): void
+  + setEmail(String): void
+  + setMoods(List<Mood>): void
+  + setPassword(String): void
+  + setRole(List<String>): void
+  + setUserName(String): void
+}
+class ClientController {
+  - clientService: ClientServiceImpl
+  + deactivateClient(Long): void
+  + getAllClients(): ResponseEntity<List<ClientDTO>>
+  + getClientById(Long): ResponseEntity<ClientDTO>
+  + getCurrentClient(): ResponseEntity<ClientDTO>
+  + updateClient(ClientDTO, String): ResponseEntity<Client>
+  + updateProfile(ProfileDTO, String): ResponseEntity<Client>
+}
+class ClientDTO {
+  - clientID: Long
+  - email: String
+  - password: String
+  - userName: String
+  + getClientID(): Long
+  + getEmail(): String
+  + getPassword(): String
+  + getUserName(): String
+  + setClientID(Long): void
+  + setEmail(String): void
+  + setPassword(String): void
+  + setUserName(String): void
+}
+class ClientMapper {
+  + mapClientDTOToClient(ClientDTO): Client
+  + mapClientToClientDTO(Client): ClientDTO
+}
+class ClientMergerService {
+  - clientRepository: ClientRepository
+  - emailValidator: EmailValidator
+  - fieldMergerService: FieldMergerService
+  - passwordValidator: PasswordValidator
+  + mergeClientData(Long, ClientDTO): void
+  + mergeProfileData(Long, ProfileDTO): void
+  - validateEmail(String): void
+  - validatePassword(String): void
+}
+interface ClientRepository << interface >> {
+  + findByEmail(String): Optional<Client>
+}
+interface ClientService << interface >> {
+  + addClient(ProfileDTO): void
+  + deleteClient(Long): void
+  + getAllClients(): List<ClientDTO>
+  + getClientById(Long): Optional<ClientDTO>
+  + getClientByIdForMood(Long): Optional<Client>
+  + getCurrentClient(): ClientDTO
+  + login(LoginRequest): LoginResponse
+  + updateClient(ClientDTO, String): Client
+  + updateProfile(ProfileDTO, String): Client
+}
+class ClientServiceImpl {
+  - authenticationManager: AuthenticationManager
+  - bCryptPasswordEncoder: BCryptPasswordEncoder
+  - calendarService: CalendarServiceImpl
+  - clientMergerService: ClientMergerService
+  - clientRepository: ClientRepository
+  - emailValidator: EmailValidator
+  - jwtUtil: JwtUtil
+  - passwordValidator: PasswordValidator
+  + addClient(ProfileDTO): void
+  + deleteClient(Long): void
+  + getAllClients(): List<ClientDTO>
+  + getClientById(Long): Optional<ClientDTO>
+  + getClientByIdForMood(Long): Optional<Client>
+  + getCurrentClient(): ClientDTO
+  + login(LoginRequest): LoginResponse
+  + updateClient(ClientDTO, String): Client
+  + updateProfile(ProfileDTO, String): Client
+}
+class CorsConfig {
+  + corsFilter(): CorsFilter
+}
+class CustomUserDetailsService {
+  - clientRepository: ClientRepository
+  + loadUserByUsername(String): UserDetails
+}
+class EmailMismatchException {
+  - status: HttpStatus
+  + getStatus(): HttpStatus
+}
+class EmailValidator {
+  - EMAIL_PATTERN: String
+  + initialize(ValidEmail): void
+  + isValid(String, ConstraintValidatorContext): boolean
+}
+enum Emotion << enumeration >> {
+  + AMUSED: 
+  + ANGRY: 
+  + ANXIOUS: 
+  + APPRECIATIVE: 
+  + APPREHENSIVE: 
+  + BORED: 
+  + CONFIDENT: 
+  + CONFUSED: 
+  + CONTENT: 
+  + CURIOUS: 
+  + DEPRESSED: 
+  + DETERMINED: 
+  + DISAPPOINTED: 
+  + DISGUSTED: 
+  + EMPATHETIC: 
+  + ENTHUSIASTIC: 
+  + ENVY: 
+  + EUPHORIC: 
+  + EXCITED: 
+  + EXHAUSTED: 
+  + FEAR: 
+  + FRUSTRATED: 
+  + GRATEFUL: 
+  + GRIEF: 
+  + GUILTY: 
+  + HAPPY: 
+  + HOMESICK: 
+  + HOPEFUL: 
+  + HOPELESS: 
+  + INDIFFERENT: 
+  + INSECURE: 
+  + INSPIRED: 
+  + IN_LOVE: 
+  + JEALOUS: 
+  + LONELY: 
+  + LOVED: 
+  + NERVOUS: 
+  + OPTIMISTIC: 
+  + OVERWHELMED: 
+  + PENSIVE: 
+  + PRIDE: 
+  + REGRET: 
+  + RELIEVED: 
+  + RESENTFUL: 
+  + SAD: 
+  + SHAME: 
+  + SORROW: 
+  + SURPRISED: 
+  + TRANQUIL: 
+  + UNMOTIVATED: 
+  + WORRIED: 
+  + valueOf(String): Emotion
+  + values(): Emotion[]
+}
+class ErrorDetails {
+  - errorCode: String
+  - message: String
+  - path: String
+  - timestamp: LocalDateTime
+  + getErrorCode(): String
+  + getMessage(): String
+  + getPath(): String
+  + getTimestamp(): LocalDateTime
+  + setErrorCode(String): void
+  + setMessage(String): void
+  + setPath(String): void
+  + setTimestamp(LocalDateTime): void
+  + toString(): String
+}
+class FieldMergerService {
+  + mergeFieldIfNotNullAndDifferent(U, Function<O, U>, Consumer<U>, T, O): void
+}
+class GlobalExceptionHandler {
+  + handleAuthenticationFailureException(AuthenticationFailureException, WebRequest): ResponseEntity<ErrorDetails>
+  + handleClientPresentInDatabaseException(PresentInDatabaseException, WebRequest): ResponseEntity<ErrorDetails>
+  + handleEmailMismatchException(EmailMismatchException, WebRequest): ResponseEntity<ErrorDetails>
+  + handleGlobalException(Exception, WebRequest): ResponseEntity<ErrorDetails>
+  + handleMergeFailureException(MergeFailureException, WebRequest): ResponseEntity<ErrorDetails>
+  + handlePasswordMismatchException(PasswordMismatchException, WebRequest): ResponseEntity<ErrorDetails>
+  + handleResourceNotFoundException(ResourceNotFoundException, WebRequest): ResponseEntity<ErrorDetails>
+}
+class JwtAuthorizationFilter {
+  - jwtUtil: JwtUtil
+  - mapper: ObjectMapper
+  # doFilterInternal(HttpServletRequest, HttpServletResponse, FilterChain): void
+}
+class JwtUtil {
+  - ACCESS_TOKEN_VALIDITY: long
+  - KEY: SecretKey
+  - SECRET_KEY: String
+  - TOKEN_HEADER: String
+  - TOKEN_PREFIX: String
+  - jwtParser: JwtParser
+  + createAccessToken(Client): String
+  - parseJwtClaims(String): Claims
+  + resolveClaims(HttpServletRequest): Claims
+  + resolveToken(HttpServletRequest): String
+  + validateClaims(Claims): boolean
+}
+class LoginRequest {
+  - email: String
+  - password: String
+  + getEmail(): String
+  + getPassword(): String
+  + setEmail(String): void
+  + setPassword(String): void
+}
+class LoginResponse {
+  - email: String
+  - token: String
+  + getEmail(): String
+  + getToken(): String
+  + setEmail(String): void
+  + setToken(String): void
+}
+class MergeFailureException {
+  - status: HttpStatus
+  + getStatus(): HttpStatus
+}
+class Mood {
+  - client: Client
+  - dateTime: LocalDateTime
+  - description: String
+  - emotion: Emotion
+  - moodID: Long
+  - rating: int
+  + getClient(): Client
+  + getDateTime(): LocalDateTime
+  + getDescription(): String
+  + getEmotion(): Emotion
+  + getMoodID(): Long
+  + getRating(): int
+  + setClient(Client): void
+  + setDateTime(LocalDateTime): void
+  + setDescription(String): void
+  + setEmotion(Emotion): void
+  + setRating(int): void
+}
+class MoodController {
+  - moodService: MoodService
+  + addMood(MoodDTO): ResponseEntity<Mood>
+  + deleteMood(Long): void
+  + getAllMoods(): ResponseEntity<List<MoodDTO>>
+  + getMoodById(Long): ResponseEntity<MoodDTO>
+  + updateMood(MoodDTO, Long): ResponseEntity<Mood>
+}
+class MoodDTO {
+  - clientID: Long
+  - dateTime: LocalDateTime
+  - description: String
+  - emotion: Emotion
+  - moodID: Long
+  - rating: int
+  + getClientID(): Long
+  + getDateTime(): LocalDateTime
+  + getDescription(): String
+  + getEmotion(): Emotion
+  + getMoodID(): Long
+  + getRating(): int
+  + setClientID(Long): void
+  + setDateTime(LocalDateTime): void
+  + setDescription(String): void
+  + setEmotion(Emotion): void
+  + setMoodID(Long): void
+  + setRating(int): void
+}
+class MoodMapper {
+  + mapMoodDTOToMood(MoodDTO, Client): Mood
+  + mapMoodToMoodDTO(Mood): MoodDTO
+}
+class MoodMergerService {
+  - fieldMergerService: FieldMergerService
+  - moodRepository: MoodRepository
+  + mergeMood(Long, MoodDTO): void
+}
+interface MoodRepository << interface >> {
+  + findByEmotionAndRatingAndDescription(Emotion, int, String): Optional<Mood>
+  + findMoodByClient(Client): List<Mood>
+}
+interface MoodService << interface >> {
+  + addMood(MoodDTO): void
+  + averageEmotion(List<Mood>): Emotion
+  + deleteMood(Long): void
+  + getAllMoods(): List<MoodDTO>
+  + getAllMoodsByClient(Client): List<Mood>
+  + getMoodById(Long): Optional<MoodDTO>
+  + updateMood(MoodDTO, Long): Mood
+}
+class MoodServiceImpl {
+  - clientService: ClientServiceImpl
+  - moodMergerService: MoodMergerService
+  - moodRepository: MoodRepository
+  + addMood(MoodDTO): void
+  + averageEmotion(List<Mood>): Emotion
+  + deleteMood(Long): void
+  + getAllMoods(): List<MoodDTO>
+  + getAllMoodsByClient(Client): List<Mood>
+  + getMoodById(Long): Optional<MoodDTO>
+  + updateMood(MoodDTO, Long): Mood
+}
+class MoodtrackerApplication {
+  + main(String[]): void
+}
+class PasswordMismatchException {
+  - status: HttpStatus
+  + getStatus(): HttpStatus
+}
+class PasswordValidator {
+  - PASSWORD_PATTERN: String
+  + initialize(ValidPassword): void
+  + isValid(String, ConstraintValidatorContext): boolean
+}
+class PresentInDatabaseException
+class ProfileDTO {
+  - avatar: Avatar
+  - birthday: LocalDate
+  - clientID: Long
+  - email: String
+  - password: String
+  - userName: String
+  + getAvatar(): Avatar
+  + getBirthday(): LocalDate
+  + getClientID(): Long
+  + getEmail(): String
+  + getPassword(): String
+  + getUserName(): String
+  + setAvatar(Avatar): void
+  + setBirthday(LocalDate): void
+  + setClientID(Long): void
+  + setEmail(String): void
+  + setPassword(String): void
+  + setUserName(String): void
+}
+class ProfileMapper {
+  + mapClientToProfileDTO(Client): ProfileDTO
+  + mapProfileDTOToProfile(ProfileDTO): Client
+}
+class ResourceNotFoundException {
+  - status: HttpStatus
+  + getStatus(): HttpStatus
+}
+enum Role << enumeration >> {
+  + ADMIN: 
+  + USER: 
+  + valueOf(String): Role
+  + values(): Role[]
+}
+class SecurityConfig {
+  - customUserDetailsService: CustomUserDetailsService
+  - jwtAuthorizationFilter: JwtAuthorizationFilter
+  + authenticationManager(HttpSecurity, BCryptPasswordEncoder): AuthenticationManager
+  + bCryptPasswordEncoder(): BCryptPasswordEncoder
+  + filterChain(HttpSecurity): SecurityFilterChain
+}
+class SwaggerConfig {
+  + customizeOpenAPI(): OpenAPI
+}
+annotation ValidEmail << annotation >> {
+  + groups(): Class<?>[]
+  + message(): String
+  + payload(): Class<Payload>[]
+}
+annotation ValidPassword << annotation >> {
+  + groups(): Class<?>[]
+  + message(): String
+  + payload(): Class<Payload>[]
+}
+
+AuthenticationController       "1" *-[#595959,plain]-> "clientService\n1" ClientServiceImpl              
+Calendar                       "1" *-[#595959,plain]-> "client\n1" Client                         
+Calendar                       "1" *-[#595959,plain]-> "averageEmotion\n1" Emotion                        
+CalendarDTO                    "1" *-[#595959,plain]-> "averageEmotion\n1" Emotion                        
+CalendarMapper                  -[#595959,dashed]->  Calendar                       : "«create»"
+CalendarMapper                  -[#595959,dashed]->  CalendarDTO                    : "«create»"
+CalendarServiceImpl             -[#595959,dashed]->  CalendarDTO                    : "«create»"
+CalendarServiceImpl            "1" *-[#595959,plain]-> "calendarRepository\n1" CalendarRepository             
+CalendarServiceImpl             -[#008200,dashed]-^  CalendarService                
+CalendarServiceImpl            "1" *-[#595959,plain]-> "clientService\n1" ClientServiceImpl              
+CalendarServiceImpl            "1" *-[#595959,plain]-> "moodService\n1" MoodServiceImpl                
+CalendarServiceImpl             -[#595959,dashed]->  PresentInDatabaseException     : "«create»"
+CalendarServiceImpl             -[#595959,dashed]->  ResourceNotFoundException      : "«create»"
+Client                         "1" *-[#595959,plain]-> "avatar\n1" Avatar                         
+Client                         "1" *-[#595959,plain]-> "calendar\n1" Calendar                       
+Client                         "1" *-[#595959,plain]-> "moods\n*" Mood                           
+Client                         "1" *-[#595959,plain]-> "roles\n*" Role                           
+ClientController               "1" *-[#595959,plain]-> "clientService\n1" ClientServiceImpl              
+ClientController                -[#595959,dashed]->  ResourceNotFoundException      : "«create»"
+ClientMapper                    -[#595959,dashed]->  Client                         : "«create»"
+ClientMapper                    -[#595959,dashed]->  ClientDTO                      : "«create»"
+ClientMergerService            "1" *-[#595959,plain]-> "clientRepository\n1" ClientRepository               
+ClientMergerService             -[#595959,dashed]->  EmailMismatchException         : "«create»"
+ClientMergerService            "1" *-[#595959,plain]-> "emailValidator\n1" EmailValidator                 
+ClientMergerService            "1" *-[#595959,plain]-> "fieldMergerService\n1" FieldMergerService             
+ClientMergerService             -[#595959,dashed]->  MergeFailureException          : "«create»"
+ClientMergerService             -[#595959,dashed]->  PasswordMismatchException      : "«create»"
+ClientMergerService            "1" *-[#595959,plain]-> "passwordValidator\n1" PasswordValidator              
+ClientMergerService             -[#595959,dashed]->  ResourceNotFoundException      : "«create»"
+ClientServiceImpl               -[#595959,dashed]->  AuthenticationFailureException : "«create»"
+ClientServiceImpl               -[#595959,dashed]->  CalendarDTO                    : "«create»"
+ClientServiceImpl              "1" *-[#595959,plain]-> "calendarService\n1" CalendarServiceImpl            
+ClientServiceImpl              "1" *-[#595959,plain]-> "clientMergerService\n1" ClientMergerService            
+ClientServiceImpl              "1" *-[#595959,plain]-> "clientRepository\n1" ClientRepository               
+ClientServiceImpl               -[#008200,dashed]-^  ClientService                  
+ClientServiceImpl               -[#595959,dashed]->  EmailMismatchException         : "«create»"
+ClientServiceImpl              "1" *-[#595959,plain]-> "emailValidator\n1" EmailValidator                 
+ClientServiceImpl              "1" *-[#595959,plain]-> "jwtUtil\n1" JwtUtil                        
+ClientServiceImpl               -[#595959,dashed]->  LoginResponse                  : "«create»"
+ClientServiceImpl               -[#595959,dashed]->  MergeFailureException          : "«create»"
+ClientServiceImpl               -[#595959,dashed]->  PasswordMismatchException      : "«create»"
+ClientServiceImpl              "1" *-[#595959,plain]-> "passwordValidator\n1" PasswordValidator              
+ClientServiceImpl               -[#595959,dashed]->  PresentInDatabaseException     : "«create»"
+ClientServiceImpl               -[#595959,dashed]->  ResourceNotFoundException      : "«create»"
+CustomUserDetailsService       "1" *-[#595959,plain]-> "clientRepository\n1" ClientRepository               
+GlobalExceptionHandler          -[#595959,dashed]->  ErrorDetails                   : "«create»"
+JwtAuthorizationFilter         "1" *-[#595959,plain]-> "jwtUtil\n1" JwtUtil                        
+Mood                           "1" *-[#595959,plain]-> "client\n1" Client                         
+Mood                           "1" *-[#595959,plain]-> "emotion\n1" Emotion                        
+MoodController                 "1" *-[#595959,plain]-> "moodService\n1" MoodService                    
+MoodController                  -[#595959,dashed]->  ResourceNotFoundException      : "«create»"
+MoodDTO                        "1" *-[#595959,plain]-> "emotion\n1" Emotion                        
+MoodMapper                      -[#595959,dashed]->  Mood                           : "«create»"
+MoodMapper                      -[#595959,dashed]->  MoodDTO                        : "«create»"
+MoodMergerService              "1" *-[#595959,plain]-> "fieldMergerService\n1" FieldMergerService             
+MoodMergerService               -[#595959,dashed]->  MergeFailureException          : "«create»"
+MoodMergerService              "1" *-[#595959,plain]-> "moodRepository\n1" MoodRepository                 
+MoodMergerService               -[#595959,dashed]->  ResourceNotFoundException      : "«create»"
+MoodServiceImpl                "1" *-[#595959,plain]-> "clientService\n1" ClientServiceImpl              
+MoodServiceImpl                 -[#595959,dashed]->  MergeFailureException          : "«create»"
+MoodServiceImpl                 -[#595959,dashed]->  Mood                           : "«create»"
+MoodServiceImpl                "1" *-[#595959,plain]-> "moodMergerService\n1" MoodMergerService              
+MoodServiceImpl                "1" *-[#595959,plain]-> "moodRepository\n1" MoodRepository                 
+MoodServiceImpl                 -[#008200,dashed]-^  MoodService                    
+MoodServiceImpl                 -[#595959,dashed]->  PresentInDatabaseException     : "«create»"
+MoodServiceImpl                 -[#595959,dashed]->  ResourceNotFoundException      : "«create»"
+ProfileDTO                     "1" *-[#595959,plain]-> "avatar\n1" Avatar                         
+ProfileMapper                   -[#595959,dashed]->  Client                         : "«create»"
+ProfileMapper                   -[#595959,dashed]->  ProfileDTO                     : "«create»"
+SecurityConfig                 "1" *-[#595959,plain]-> "customUserDetailsService\n1" CustomUserDetailsService       
+SecurityConfig                 "1" *-[#595959,plain]-> "jwtAuthorizationFilter\n1" JwtAuthorizationFilter         
+@enduml

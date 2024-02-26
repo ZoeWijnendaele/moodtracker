@@ -1,0 +1,42 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class calendar {
+   date: datetime(6)
+   client_id: bigint
+   calendarid: bigint
+}
+class calendar_emotions {
+   emotion: enum('amused', 'angry', 'anxious', 'appreciative', 'apprehensive', 'bored', 'confident', 'content', 'confused', 'curious', 'depressed', 'disappointed', 'disgusted', 'determined', 'empathetic', 'enthusiastic', 'envy', 'euphoric', 'excited', 'exhausted', 'fear', 'frustrated', 'grief', 'grateful', 'guilty', 'happy', 'homesick', 'hopeful', 'hopeless', 'indifferent', 'in_love', 'insecure', 'inspired', 'jealous', 'lonely', 'loved', 'nervous', 'optimistic', 'overwhelmed', 'pensive', 'pride', 'regret', 'relieved', 'resentful', 'sad', 'shame', 'sorrow', 'surprised', 'tranquil', 'unmotivated', 'worried')
+   calendar_calendarid: bigint
+   date: date
+}
+class client {
+   avatar: enum('default', 'option1', 'option2', 'option3', 'option4', 'option5', 'no_change')
+   birthday: date
+   email: varchar(255)
+   password: varchar(255)
+   username: varchar(255)
+   client_id: bigint
+}
+class client_roles {
+   client_client_id: bigint
+   role: enum('user', 'admin')
+}
+class mood {
+   date: date
+   description: varchar(255)
+   emotion: enum('amused', 'angry', 'anxious', 'appreciative', 'apprehensive', 'bored', 'confident', 'content', 'confused', 'curious', 'depressed', 'disappointed', 'disgusted', 'determined', 'empathetic', 'enthusiastic', 'envy', 'euphoric', 'excited', 'exhausted', 'fear', 'frustrated', 'grief', 'grateful', 'guilty', 'happy', 'homesick', 'hopeful', 'hopeless', 'indifferent', 'in_love', 'insecure', 'inspired', 'jealous', 'lonely', 'loved', 'nervous', 'optimistic', 'overwhelmed', 'pensive', 'pride', 'regret', 'relieved', 'resentful', 'sad', 'shame', 'sorrow', 'surprised', 'tranquil', 'unmotivated', 'worried')
+   rating: int
+   client_id: bigint
+   mood_id: bigint
+}
+
+calendar           -[#595959,plain]-^  client            : "client_id"
+calendar_emotions  -[#595959,plain]-^  calendar          : "calendar_calendarid:calendarid"
+client_roles       -[#595959,plain]-^  client            : "client_client_id:client_id"
+mood               -[#595959,plain]-^  client            : "client_id"
+@enduml
