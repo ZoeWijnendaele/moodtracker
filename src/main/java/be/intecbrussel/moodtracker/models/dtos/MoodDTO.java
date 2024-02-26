@@ -1,13 +1,9 @@
 package be.intecbrussel.moodtracker.models.dtos;
 
-import be.intecbrussel.moodtracker.models.Client;
 import be.intecbrussel.moodtracker.models.enums.Emotion;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class MoodDTO {

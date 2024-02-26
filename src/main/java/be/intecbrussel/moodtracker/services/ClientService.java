@@ -5,7 +5,6 @@ import be.intecbrussel.moodtracker.models.dtos.ClientDTO;
 import be.intecbrussel.moodtracker.models.dtos.LoginRequest;
 import be.intecbrussel.moodtracker.models.dtos.LoginResponse;
 import be.intecbrussel.moodtracker.models.dtos.ProfileDTO;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 import java.util.Optional;

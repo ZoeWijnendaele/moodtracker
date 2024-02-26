@@ -3,10 +3,7 @@ package be.intecbrussel.moodtracker.models;
 import be.intecbrussel.moodtracker.models.enums.Emotion;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @Entity
 public class Calendar {

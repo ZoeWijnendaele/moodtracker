@@ -2,7 +2,6 @@ package be.intecbrussel.moodtracker.services;
 
 import be.intecbrussel.moodtracker.models.Calendar;
 import be.intecbrussel.moodtracker.models.Client;
-import be.intecbrussel.moodtracker.models.Mood;
 import be.intecbrussel.moodtracker.models.dtos.CalendarDTO;
 
 import java.time.LocalDateTime;

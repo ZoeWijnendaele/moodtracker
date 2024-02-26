@@ -2,8 +2,6 @@ package be.intecbrussel.moodtracker.models.dtos;
 
 import be.intecbrussel.moodtracker.validators.ValidEmail;
 import be.intecbrussel.moodtracker.validators.ValidPassword;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 
 public class ClientDTO {
 

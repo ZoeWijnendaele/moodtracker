@@ -5,8 +5,6 @@ import be.intecbrussel.moodtracker.validators.ValidEmail;
 import be.intecbrussel.moodtracker.validators.ValidPassword;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
