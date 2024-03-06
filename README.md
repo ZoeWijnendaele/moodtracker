@@ -1,30 +1,35 @@
 # MoodTracker
-Welcome to MoodTracker, a mood tracking application designed to help users understand and manage their emotional well-being through visual representation using animal avatars.
+
+Welcome to my MoodTracker, a mood tracking application designed to help users understand and manage their emotional well-being through visual representation using animal avatars.
 
 ## Table of Contents
-- Introduction
-- Installation
-- Usage
-- About
-- Future Plans
+- [Introduction](#introduction)
+- [Target Audience](#target-audience)
+- [Main Goal](#main-goal)
+- [Functionalities](#functionalities)
+- [Installation](#installation)
+- [Usage](#usage)
+- [About](#about)
+- [Future Plans](#future-plans)
+- [License](#license)
 
 ## Introduction
+
 Our mission is to guide individuals in understanding and mastering their emotional world through the visual representation of animals. 
 By providing a simple and intuitive interface, MoodTracker aims to empower users to track their daily moods effectively.
 
 ## Target Audience
 
-#### People Seeking Stress Reduction or Emotional Management:
+MoodTracker caters to two primary user groups:
 
+#### People Seeking Stress Reduction or Emotional Management:
 - Focus on stress management and understanding mood triggers.
 - Require user-friendly interfaces with goal-setting and progress tracking capabilities.
 
 #### Individuals with Mood Disorders:
-
 - Need an easy way to track daily moods and add relevant notes for their treatment.
 - Require user-friendly interfaces as they may be in vulnerable states.
 - Can benefit from trend analysis and advice to manage mood fluctuations.
-
 
 ## Main Goal
 
@@ -57,9 +62,6 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
 - **Connect with Professionals:**
   The app should provide users with options to connect with nearby healthcare professionals if needed.
 
-- **Groundbreaking Research:**
-  User data can be utilized for groundbreakin
-
 ### Non-functional Requirements:
 
 - **Security:**
@@ -85,7 +87,8 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
 
 ## Functionalities
 
-### Work in progress Features:
+### Work in Progress Features:
+
 - **User Registration and Login:**
   Register using email and password, with optional social media login.
 - **User Profiles:**
@@ -102,6 +105,7 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
   Set reminders for daily mood tracking and send notifications based on trends and analyses.
 
 ### Data Stored in the Database:
+
 - **User Data:**
   Email, password, avatar, preferences (e.g., notifications, privacy).
 - **Mood Entries:**
@@ -112,7 +116,7 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
   Friend lists, shared moods and reactions, messages, chat history.
 - **Administration Data:**
   User account management, content and moderation management, change tracking logs.
-    
+
 ## Installation
 
 To install MoodTracker, please follow these steps:
@@ -128,3 +132,36 @@ To install MoodTracker, please follow these steps:
 
 3. Set up the backend using IntelliJ, Maven, MySQL, Spring, Java, JUnit5, Mockito, and H2 according to the provided configuration.
 
+## Usage
+
+To use MoodTracker, follow these guidelines:
+
+1. Register for an account or log in using existing credentials.
+2. Customize your profile with personal information and avatars.
+3. Track your mood daily using the mood tracking feature, adding notes and timestamps as needed.
+4. View your mood entries in the overview section.
+5. Analyze mood trends through the agenda.
+6. Analyze mood trends through graphs and statistics provided by the app.
+7. Receive advice and recommendations based on identified mood trends.
+8. Set up notifications for reminders and alerts regarding your mood state.
+
+## About
+
+MoodTracker was created to provide individuals with a simple yet powerful tool to monitor and manage their emotional well-being. 
+By visualizing mood data and providing actionable insights, we aim to empower users on their journey towards better mental health.
+
+## Future Plans
+
+I am committed to continuously improving this MoodTracker. Planned future updates include:
+
+- Finishing the agenda functionalities.
+- Enhancing the front-end.
+- Integrating AI functionalities.
+- Allowing professionals to view users' mood entries.
+- Collecting user data for research purposes.
+
+We welcome feedback and suggestions from people to make this MoodTracker even more effective and user-friendly.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
