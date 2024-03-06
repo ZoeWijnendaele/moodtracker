@@ -85,33 +85,33 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
 
 ## Functionalities
 
-### Included Features:
+### Work in progress Features:
 - **User Registration and Login:**
-  - Register using email and password, with optional social media login.
+  Register using email and password, with optional social media login.
 - **User Profiles:**
-  - Customize profile pages with personal information and avatars.
+  Customize profile pages with personal information and avatars.
 - **Mood Tracking:**
-  - Record daily mood with a scale and add notes and timestamps.
+  Record daily mood with a scale and add notes and timestamps.
 - **Mood Entry Overview:**
-  - View a chronological list of mood entries with filters and search options.
+  View a chronological list of mood entries with filters and search options.
 - **Mood Trend Analysis:**
-  - Display graphs and statistics showing mood changes over time, identifying patterns and trends.
+  Display graphs and statistics showing mood changes over time, identifying patterns and trends.
 - **Advice based on Trends:**
-  - Offer suggestions and recommendations based on mood trends for mood improvement.
+  Offer suggestions and recommendations based on mood trends for mood improvement.
 - **User Notifications:**
-  - Set reminders for daily mood tracking and send notifications based on trends and analyses.
+  Set reminders for daily mood tracking and send notifications based on trends and analyses.
 
 ### Data Stored in the Database:
 - **User Data:**
-  - Email, password, avatar, preferences (e.g., notifications, privacy).
+  Email, password, avatar, preferences (e.g., notifications, privacy).
 - **Mood Entries:**
-  - Date, time, mood emotion (via animal avatars), notes, optional location, intensity score.
+  Date, time, mood emotion (via animal avatars), notes, intensity score.
 - **Trend Data:**
-  - Mood statistics, graphs, comparisons with previous periods, machine learning models for future predictions.
+  Mood statistics, graphs, comparisons with previous periods, machine learning models for future predictions.
 - **Social Data (Optional):**
-  - Friend lists, shared moods and reactions, messages, chat history.
+  Friend lists, shared moods and reactions, messages, chat history.
 - **Administration Data:**
-  - User account management, content and moderation management, change tracking logs.
+  User account management, content and moderation management, change tracking logs.
     
 ## Installation
 
@@ -119,12 +119,11 @@ To install MoodTracker, please follow these steps:
 
 1. Clone the repository to your local machine:
     ```sh
-    git clone <repository_url>
+    git clone <[repository_url](https://github.com/ZoeWijnendaele/moodtracker.git)>
     ```
-
 2. Navigate to the project directory:
     ```sh
-    cd MoodTracker
+    cd moodtrackerdb
     ```
 
 3. Set up the backend using IntelliJ, Maven, MySQL, Spring, Java, JUnit5, Mockito, and H2 according to the provided configuration.
