@@ -119,19 +119,38 @@ Moodtracker caters to two primary user groups:
   User account management, content and moderation management, change tracking logs.
 
 ## Installation
+## Installation
 
 To install MoodTracker, please follow these steps:
 
 1. Clone the repository to your local machine:
     ```sh
-   https://github.com/ZoeWijnendaele/moodtracker.git
-    ```
-2. Navigate to the project directory:
-    ```sh
-    cd moodtracker
+   git clone https://github.com/ZoeWijnendaele/moodtracker.git
     ```
 
-3. Set up the backend using IntelliJ, Maven, MySQL, Spring, Java, JUnit5, Mockito, and H2 according to the provided configuration.
+2. Navigate to the project directory:
+    ```sh
+    cd moodtrackerdb
+    ```
+
+3. **Set up the Backend:**
+
+    - **IDE Setup:** Open the project in your preferred Integrated Development Environment (IDE), such as IntelliJ IDEA.
+    
+    - **Dependency Installation:** Use Maven to install project dependencies. You can do this by running the following command in the terminal:
+      ```sh
+      mvn clean install
+      ```
+            
+    - **Database Configuration:** Configure MySQL database settings in the `application.properties` file located in `src/main/resources`. Update the database URL, username, and password as per your MySQL       setup.
+
+    - **Run the Application:** Run the Spring Boot application. You can do this by running the `MoodtrackerApplication.java` file as a Java application from your IDE.
+
+    - **Verify Backend Setup:** Once the application is running, you can verify that the backend is set up correctly by accessing the following URL in your web browser:
+      ```
+      http://localhost:8080/swagger-ui.html
+      ```
+      This will open the Swagger UI, where you can explore and test the backend APIs.
 
 ## Usage
 
