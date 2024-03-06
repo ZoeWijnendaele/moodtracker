@@ -15,7 +15,9 @@ Welcome to my moodtracker, an emotion tracking application designed to help user
 
 ## Introduction
 
-Our mission is to guide individuals in understanding and mastering their emotional world through the visual representation of animals. By providing a simple and intuitive interface, MoodTracker aims to empower users to track their daily moods effectively.
+Our mission is to guide individuals in understanding and mastering their emotional world through the visual representation of animals.  
+By providing a simple and intuitive interface, MoodTracker aims to empower users to track their daily moods effectively.
+
 
 ## Target Audience
 
