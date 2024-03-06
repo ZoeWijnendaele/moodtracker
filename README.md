@@ -149,6 +149,7 @@ To use Moodtracker, follow these guidelines:
 ## About
 
 Moodtracker was created to provide individuals with a simple yet powerful tool to monitor and manage their emotional well-being. 
+
 By visualizing mood data and providing actionable insights, we aim to empower users on their journey towards better mental health.
 
 ## Future Plans
