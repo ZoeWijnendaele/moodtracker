@@ -52,10 +52,3 @@ Functional Requirements:
 Non-functional Requirements:
 + # 
 
-## Installation
-To install MoodTracker, follow these steps:
-
-1. Clone the repository to your local machine:
-
-```bash
-git clone https://github.com/your-username/moodtracker.git
