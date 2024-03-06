@@ -17,7 +17,7 @@ Welcome to my moodtracker, an emotion tracking application designed to help user
 
 Moodtracker was created to provide individuals with a simple yet powerful tool to monitor and manage their emotional well-being.  
 
-By visualizing mood data and providing actionable insights, we aim to empower users on their journey towards better mental health.
+By visualizing mood data and providing actionable insights, I aim to empower users on their journey towards better mental health.
 
 ## Target Audience
 
@@ -150,7 +150,7 @@ To use Moodtracker, follow these guidelines:
 
 Moodtracker was created to provide individuals with a simple yet powerful tool to monitor and manage their emotional well-being. 
 
-By visualizing mood data and providing actionable insights, we aim to empower users on their journey towards better mental health.
+By visualizing mood data and providing actionable insights, I aim to empower users on their journey towards better mental health.
 
 ## Future Plans
 
@@ -162,7 +162,7 @@ I am committed to continuously improving this Moodtracker. Planned future update
 - Allowing professionals to view users' mood entries.
 - Collecting user data for research purposes.
 
-We welcome feedback and suggestions from people to make this MoodTracker even more effective and user-friendly.
+We welcome feedback and suggestions from people to make this moodtracker even more effective and user-friendly.
 
 ## License
 
