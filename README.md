@@ -2,10 +2,10 @@
 Welcome to MoodTracker, a mood tracking application designed to help users understand and manage their emotional well-being through visual representation using animal avatars.
 
 ## Introduction
-Installation
-Usage
-About
-Future Plans
+- Installation
+- Usage
+- About
+- Future Plans
 
 ## Introduction
 Our mission is to guide individuals in understanding and mastering their emotional world through the visual representation of animals. 
@@ -27,7 +27,7 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
 
 ## Main Goal
 
-# Functional Requirements:
+### Functional Requirements:
 
 - **User Registration and Login:**
   Users should be able to create accounts and log in to track their mood.
@@ -59,7 +59,7 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
 - **Groundbreaking Research:**
   User data can be utilized for groundbreakin
 
-## Non-functional Requirements:
+### Non-functional Requirements:
 
 - **Security:**
   User data must be securely stored and communicated, adhering to security standards.
