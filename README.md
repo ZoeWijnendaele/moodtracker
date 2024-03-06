@@ -13,16 +13,16 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
 
 ## Target Audience
 
-### People Seeking Stress Reduction or Emotional Management:
+#### People Seeking Stress Reduction or Emotional Management:
 
-- **Focus on stress management and understanding mood triggers.**
-- **Require user-friendly interfaces with goal-setting and progress tracking capabilities.**
+- Focus on stress management and understanding mood triggers.
+- Require user-friendly interfaces with goal-setting and progress tracking capabilities.
 
-### Individuals with Mood Disorders:
+#### Individuals with Mood Disorders:
 
-- **Need an easy way to track daily moods and add relevant notes for their treatment.**
-- **Require user-friendly interfaces as they may be in vulnerable states.**
-- **Can benefit from trend analysis and advice to manage mood fluctuations.**
+- Need an easy way to track daily moods and add relevant notes for their treatment.
+- Require user-friendly interfaces as they may be in vulnerable states.
+- Can benefit from trend analysis and advice to manage mood fluctuations.
 
 
 ## Main Goal
