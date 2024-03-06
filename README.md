@@ -1,53 +1,61 @@
-###MoodTracker
-Welcome to MoodTracker, a mood tracking application designed to help individuals understand and manage their emotional well-being through visual representation of animals.
+### MoodTracker
+Welcome to MoodTracker, a mood tracking application designed to help users understand and manage their emotional well-being through visual representation using animal avatars.
 
-##Installation
+## Introduction
+Installation
+Usage
+About
+Future Plans
+
+## Introduction
+Our mission is to guide individuals in understanding and mastering their emotional world through the visual representation of animals. 
+By providing a simple and intuitive interface, MoodTracker aims to empower users to track their daily moods effectively.
+
+## Target Audience
+People Seeking Stress Reduction or Emotional Management:
++ Focus on stress management and understanding mood triggers.
++ Require user-friendly interfaces with goal-setting and progress tracking capabilities.
+
+Individuals with Mood Disorders:
++ Need an easy way to track daily moods and add relevant notes for their treatment.
++ Require user-friendly interfaces as they may be in vulnerable states.
++ Can benefit from trend analysis and advice to manage mood fluctuations.
+
+## Main Goal
+Functional Requirements:
++ # User Registration and Login:
+  Users should be able to create accounts and log in to track their mood.
++ # Mood Tracking:
+  Users can input their mood at various times throughout the day with timestamps, with the option to add notes and.
++ # Mood Entry Overview:
+  Users should be able to view their previously entered moods in a clear list format.
++ # Trend Analysis:
+  The app should analyze user mood data and identify trends, such as seasonal patterns.
++ # Advice and Recommendations:
+  Based on trend analysis, the app should provide users with advice and recommendations to improve their mood.
++ # Notifications:
+  Users should receive notifications about prolonged mood states and suggestions for action.
++ # Data Storage:
+  User data, mood entries, and trend data should be securely stored in a database.
++ # User Profiles:
+  Users should be able to customize their profiles and potentially share information about themselves.
++ # Connect with Professionals:
+  The app should provide users with options to connect with nearby healthcare professionals if needed.
++ # Groundbreaking Research:
+  User data can be utilized for groundbreaking research in mental health.
++ # AI Integration for Recommendations:
+  Integrating AI to provide personalized recommendations such as movies, music, physical activities, and nearby professionals.
+  The AI can also analyze trends and offer advice to users.
++ # Sharing Mood Details with Professionals:
+  Users will have the option to share their mood details with healthcare professionals to enhance guidance during sessions.
+
+Non-functional Requirements:
++ # 
+
+## Installation
 To install MoodTracker, follow these steps:
 
-Clone the repository to your local machine:
-bash
-Copy code
+1. Clone the repository to your local machine:
+
+```bash
 git clone https://github.com/your-username/moodtracker.git
-Navigate to the project directory:
-bash
-Copy code
-cd moodtracker
-Install dependencies:
-bash
-Copy code
-npm install
-Start the application:
-bash
-Copy code
-npm start
-Open your web browser and visit http://localhost:3000 to access MoodTracker.
-Usage
-MoodTracker allows users to track their daily mood and gain insights into their emotional patterns. Here's how to use it:
-
-User Registration and Login:
-
-Create an account using your email and password.
-Optionally, log in using your social media accounts.
-Profile Customization:
-
-Personalize your profile page with avatars and personal information.
-Mood Tracking:
-
-Log your daily mood on a scale of 1 to 10, along with optional notes and timestamps.
-Use animal avatars to represent different moods.
-View Mood Entries:
-
-See a chronological list of your mood entries.
-Utilize filters and search options for easy access to specific entries.
-Analyze Mood Trends:
-
-View graphs and statistics displaying changes in your mood over time.
-Identify patterns and trends to better understand your emotional fluctuations.
-Receive Recommendations:
-
-Get personalized suggestions and recommendations based on mood trends.
-Receive tips for improving your mood and references to relevant resources.
-Set Notifications:
-
-Set reminders for daily mood tracking.
-Receive notifications based on mood trends and analyses.
