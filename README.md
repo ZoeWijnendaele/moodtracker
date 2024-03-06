@@ -22,32 +22,39 @@ Individuals with Mood Disorders:
 + Can benefit from trend analysis and advice to manage mood fluctuations.
 
 ## Main Goal
-Functional Requirements:
-+ # User Registration and Login:
+
+### Functional Requirements:
+
+- **User Registration and Login:**
   Users should be able to create accounts and log in to track their mood.
-+ # Mood Tracking:
-  Users can input their mood at various times throughout the day with timestamps, with the option to add notes and.
-+ # Mood Entry Overview:
+
+- **Mood Tracking:**
+  Users can input their mood at various times throughout the day with timestamps, with the option to add notes.
+
+- **Mood Entry Overview:**
   Users should be able to view their previously entered moods in a clear list format.
-+ # Trend Analysis:
+
+- **Trend Analysis:**
   The app should analyze user mood data and identify trends, such as seasonal patterns.
-+ # Advice and Recommendations:
+
+- **Advice and Recommendations:**
   Based on trend analysis, the app should provide users with advice and recommendations to improve their mood.
-+ # Notifications:
+
+- **Notifications:**
   Users should receive notifications about prolonged mood states and suggestions for action.
-+ # Data Storage:
+
+- **Data Storage:**
   User data, mood entries, and trend data should be securely stored in a database.
-+ # User Profiles:
+
+- **User Profiles:**
   Users should be able to customize their profiles and potentially share information about themselves.
-+ # Connect with Professionals:
+
+- **Connect with Professionals:**
   The app should provide users with options to connect with nearby healthcare professionals if needed.
-+ # Groundbreaking Research:
-  User data can be utilized for groundbreaking research in mental health.
-+ # AI Integration for Recommendations:
-  Integrating AI to provide personalized recommendations such as movies, music, physical activities, and nearby professionals.
-  The AI can also analyze trends and offer advice to users.
-+ # Sharing Mood Details with Professionals:
-  Users will have the option to share their mood details with healthcare professionals to enhance guidance during sessions.
+
+- **Groundbreaking Research:**
+  User data can be utilized for groundbreakin
+
 
 Non-functional Requirements:
 + # 
