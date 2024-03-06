@@ -1,6 +1,6 @@
-# MoodTracker
+# Moodtracker
 
-Welcome to my MoodTracker, a mood tracking application designed to help users understand and manage their emotional well-being through visual representation using animal avatars.
+Welcome to my moodtracker, an emotion tracking application designed to help users understand and manage their emotional well-being through visual representation using animal avatars.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -20,7 +20,7 @@ By providing a simple and intuitive interface, MoodTracker aims to empower users
 
 ## Target Audience
 
-MoodTracker caters to two primary user groups:
+Moodtracker caters to two primary user groups:
 
 #### People Seeking Stress Reduction or Emotional Management:
 - Focus on stress management and understanding mood triggers.
@@ -134,7 +134,7 @@ To install MoodTracker, please follow these steps:
 
 ## Usage
 
-To use MoodTracker, follow these guidelines:
+To use Moodtracker, follow these guidelines:
 
 1. Register for an account or log in using existing credentials.
 2. Customize your profile with personal information and avatars.
@@ -147,12 +147,12 @@ To use MoodTracker, follow these guidelines:
 
 ## About
 
-MoodTracker was created to provide individuals with a simple yet powerful tool to monitor and manage their emotional well-being. 
+Moodtracker was created to provide individuals with a simple yet powerful tool to monitor and manage their emotional well-being. 
 By visualizing mood data and providing actionable insights, we aim to empower users on their journey towards better mental health.
 
 ## Future Plans
 
-I am committed to continuously improving this MoodTracker. Planned future updates include:
+I am committed to continuously improving this Moodtracker. Planned future updates include:
 
 - Finishing the agenda functionalities.
 - Enhancing the front-end.
