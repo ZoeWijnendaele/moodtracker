@@ -128,7 +128,7 @@ To install MoodTracker, please follow these steps:
     ```
 2. Navigate to the project directory:
     ```sh
-    cd moodtrackerdb
+    cd moodtracker
     ```
 
 3. Set up the backend using IntelliJ, Maven, MySQL, Spring, Java, JUnit5, Mockito, and H2 according to the provided configuration.
