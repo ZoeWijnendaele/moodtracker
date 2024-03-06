@@ -1,7 +1,8 @@
 # MoodTracker
 Welcome to MoodTracker, a mood tracking application designed to help users understand and manage their emotional well-being through visual representation using animal avatars.
 
-## Introduction
+## Table of Contents
+- Introduction
 - Installation
 - Usage
 - About
