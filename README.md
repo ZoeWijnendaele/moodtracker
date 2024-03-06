@@ -1,4 +1,4 @@
-#### MoodTracker
+# MoodTracker
 Welcome to MoodTracker, a mood tracking application designed to help users understand and manage their emotional well-being through visual representation using animal avatars.
 
 ## Introduction
@@ -12,14 +12,18 @@ Our mission is to guide individuals in understanding and mastering their emotion
 By providing a simple and intuitive interface, MoodTracker aims to empower users to track their daily moods effectively.
 
 ## Target Audience
-People Seeking Stress Reduction or Emotional Management:
-+ Focus on stress management and understanding mood triggers.
-+ Require user-friendly interfaces with goal-setting and progress tracking capabilities.
 
-Individuals with Mood Disorders:
-+ Need an easy way to track daily moods and add relevant notes for their treatment.
-+ Require user-friendly interfaces as they may be in vulnerable states.
-+ Can benefit from trend analysis and advice to manage mood fluctuations.
+### People Seeking Stress Reduction or Emotional Management:
+
+- **Focus on stress management and understanding mood triggers.**
+- **Require user-friendly interfaces with goal-setting and progress tracking capabilities.**
+
+### Individuals with Mood Disorders:
+
+- **Need an easy way to track daily moods and add relevant notes for their treatment.**
+- **Require user-friendly interfaces as they may be in vulnerable states.**
+- **Can benefit from trend analysis and advice to manage mood fluctuations.**
+
 
 ## Main Goal
 
@@ -55,7 +59,27 @@ Individuals with Mood Disorders:
 - **Groundbreaking Research:**
   User data can be utilized for groundbreakin
 
+## Non-functional Requirements:
 
-Non-functional Requirements:
-+ # 
+- **Security:**
+  User data must be securely stored and communicated, adhering to security standards.
+
+- **Performance:**
+  The app should respond quickly and be scalable to support a growing user base.
+
+- **Maintainability:**
+  Code should be well-documented for maintenance and updates.
+
+- **User-Friendliness:**
+  The user interface should be intuitive and user-friendly.
+
+- **Platform Independence:**
+  Consideration for accessibility on multiple platforms (e.g., web and mobile).
+
+- **Privacy:**
+  Ensure compliance with privacy laws and protect user information.
+
+- **Scalability:**
+  Consider how the app can be scaled to support more users.
+
 
